@@ -1,0 +1,19 @@
+{
+  "name": "zpsend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/tlhakhang/zpsend.git"
+  },
+  "author": "tlhakhang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tlhakhang/zpsend/issues"
+  },
+  "homepage": "https://github.com/tlhakhang/zpsend#readme"
+}
