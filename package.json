@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/tlhakhang/zpsend/issues"
   },
-  "homepage": "https://github.com/tlhakhang/zpsend#readme"
+  "homepage": "https://github.com/tlhakhang/zpsend#readme",
+  "dependencies": {
+    "msgpack-lite": "^0.1.26"
+  }
 }
