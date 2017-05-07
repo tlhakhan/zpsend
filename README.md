@@ -17,10 +17,14 @@
 - Do performance testing, and node cluster testing.
   - Use node cluster to setup multiple zfs recv daemons? -- Central locking scheme may be required for potential duplicate zfs send|recvs.
 
+## Caution
+- The zfs recv daemon server does perform a zfs recv with a -F flag, which has an implicit rollback to the last matching snapshot.  So if you have live data in that dataset, please be sure to create a snapshot first, this shouldn't be a worry on a 'replicated/backup' server.
+
 ## Starting Up
+Notes:  using environment variables to inject variables into the node process, will be more robust later.  If no env variables are given, they will assume sane defaults, -- it can communicate with itself (127.0.0.1), but it will always find all the snapshots, so no sending.
 ```
 [smos-00] server start:  node receiver/
-[smos-01] client start:  node sender/
+[smos-01] client start:  ZHOST=[ip address of zserver] ZFILESYSTEM=[zfs fs name] node sender/
 ```
 
 ## End state
