@@ -1,10 +1,10 @@
 'use strict';
 
 let net = require('net');
-let Receiver = require('./server.js');
+let stateFlow = require('./logic.js');
 const server = net.createServer();
 
-server.on('connection', (socket) => new Receiver(socket))
+server.on('connection', (socket) => stateFlow(socket))
     .on('error', (err) => {
         console.log(err);
     });

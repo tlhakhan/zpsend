@@ -26,5 +26,7 @@ module.exports = {
     'LIST': 'LIST',
     'RECV_START': 'RECV_START',
     'RECV_DONE': 'RECV_DONE',
-    'END': 'END'
+    'END': 'END',
+    'ERROR':'ERROR',
+    'DONE':'DONE'
 };
