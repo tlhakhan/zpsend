@@ -24,10 +24,10 @@ const testFs = {
 };
 
 class Worker extends EventEmitter {
-    constructor(client, testFs) {
+    constructor(client, filesystem) {
         super();
         this.client = client;
-        this.fs = testFs;
+        this.fs = filesystem;
 
         this.on(INIT, (data) => {
             // data is expected to be null.
