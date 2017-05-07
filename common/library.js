@@ -25,9 +25,9 @@ function getSnapshotList(fs, cb) {
 
     proc.on('close', (code) => {
         if (out.length === 0) {
-            Object.assign({}, fs, {
+            cb(Object.assign({}, fs, {
                 list: out
-            });
+            }));
         } else {
             out = out.join();
             out = out.split(/\n/);
@@ -46,16 +46,18 @@ function getZfsRecvStream(fs, cb) {
 }
 
 function getZfsSendStream(fs, cb) {
+    /*
+    fs = {
+      name: filesystem name
+      incremental: true|false
+      snapshot: [initial | from - to]
+    }
+    */
     if (fs.incremental) {
-        console.log('performing incremental send');
-        console.log(fs);
-        let [from, to] = fs.snapshot;
-        let proc = spawn('zfs', ['send', '-i', from, to]);
-        proc.on('close', (code) => console.log(code))
+        let proc = spawn('zfs', ['send', '-i', fs.snapFrom, fs.snapTo]);
         cb(proc);
     } else {
-        let [initial] = fs.snapshot;
-        let proc = spawn('zfs', ['send', initial]);
+        let proc = spawn('zfs', ['send', fs.snapInitial]);
         cb(proc);
     }
 }

@@ -7,6 +7,8 @@ const {
     SNAPSHOT_LIST,
     GET_SNAPSHOT_LIST,
     RECV_START,
+    RECV_DONE,
+    END
 } = require('../common/messages');
 
 const {
@@ -34,14 +36,40 @@ class Worker extends EventEmitter {
             log.info('received a get snapshot list message from client for %s', fs.name);
             getSnapshotList(fs, (fs) => {
                 log.info('sending client a list of snapshot for %s', fs.name);
-                log.info(fs.list);
+                log.info(fs.list.join(', '));
                 this.socket.write(message(SNAPSHOT_LIST, fs));
-            })
+            });
         });
 
-        this.on(RECV_START, (data) => {
+        this.on(RECV_START, (fs) => {
             // data is expected to be an object.
+            /*
+            fs = {
+              name: filesystem name
+              incremental:  true| false
+              snapshot: [initial | from - to]
+            }
+            */
             log.info('received a start zfs recv process message from client');
+            // starting up recv
+            if (fs.incremental) log.info('incremental send');
+            getZfsRecvStream(fs, (proc) => {
+                this.socket.pipe(proc.stdin).on('finish', () => {
+                    log.debug('finished receiving the filesystem %s', fs.name);
+                    log.info('telling client receive is done.');
+                    this.socket.resume();
+                    this.socket.write(message(RECV_DONE, fs));
+                });
+
+                // tell the client ready to recvFs
+                this.socket.write(message(RECV_START, fs));
+            });
+
+        });
+
+        this.on(END, () => {
+            log.info('client is finished, politely asked to end connection');
+            this.socket.end();
         });
     }
 }

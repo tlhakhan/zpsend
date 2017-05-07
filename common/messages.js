@@ -30,5 +30,6 @@ module.exports = {
     'RECV_DONE': 'RECV_DONE',
     'END': 'END',
     'ERROR': 'ERROR',
-    'DONE': 'DONE'
+    'DONE': 'DONE',
+    'END': 'END'
 };
