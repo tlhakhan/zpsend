@@ -1,4 +1,4 @@
-## Progress
+## Progress Notes
 
 ### Objectives
 - Given a filesystem clone or real, send over all descendant snapshots,
@@ -9,13 +9,24 @@
 
 ## Starting Up
 ```
-server start:  node receiver/
-client start:  node sender/
+[smos-00] server start:  node receiver/
+[smos-01] client start:  node sender/
 ```
 
-## Background
-- [ client ] - wants to send the below snapshots to another server.
+## End state
 ```
+[root@smos-00 /zones/zpsend]# zfs list -r -t all zones/test
+NAME               USED  AVAIL  REFER  MOUNTPOINT
+zones/test          99K   235G    25K  /zones/test
+zones/test@now       1K      -    23K  -
+zones/test@now2      1K      -    23K  -
+zones/test@8550     15K      -    25K  -
+zones/test@18569    15K      -    25K  -
+zones/test@20392    15K      -    25K  -
+zones/test@30577    15K      -    25K  -
+zones/test@4387       0      -    25K  -
+
+[root@smos-01 /zones/zpsend]# zfs list -r -t all zones/test
 NAME               USED  AVAIL  REFER  MOUNTPOINT
 zones/test        1.11M   236G  1.04M  /zones/test
 zones/test@now        0      -    23K  -
