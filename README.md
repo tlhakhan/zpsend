@@ -239,16 +239,16 @@ zones/test@4387       0      -  1.04M  -
 ## Client - Example Subsequent Run
 ```
 [root@smos-01 /zones/zpsend]# ZHOST=192.168.100.220 node sender| bunyan
-[2017-05-07T20:23:05.933Z]  INFO: zpsend/12081 on smos-01: sending init message to server
-[2017-05-07T20:23:05.939Z]  INFO: zpsend/12081 on smos-01: received an init message from server
-[2017-05-07T20:23:05.939Z]  INFO: zpsend/12081 on smos-01: asking server to get snapshot list for zones/test
-[2017-05-07T20:23:05.964Z]  INFO: zpsend/12081 on smos-01: received snapshots for zones/test filesystem from server
-[2017-05-07T20:23:05.964Z]  INFO: zpsend/12081 on smos-01: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
-[2017-05-07T20:23:05.994Z]  INFO: zpsend/12081 on smos-01: found the following snapshots on my filesystem zones/test
-[2017-05-07T20:23:05.995Z]  INFO: zpsend/12081 on smos-01: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
-[2017-05-07T20:23:05.995Z]  INFO: zpsend/12081 on smos-01: the server has all my snapshots
-[2017-05-07T20:23:05.995Z]  INFO: zpsend/12081 on smos-01: my snapshots: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
-[2017-05-07T20:23:05.995Z]  INFO: zpsend/12081 on smos-01: server snapshots: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
-[2017-05-07T20:23:05.995Z]  INFO: zpsend/12081 on smos-01: asking server to end connection
-[2017-05-07T20:23:05.997Z]  INFO: zpsend/12081 on smos-01: server closed my connection
+[2017-05-07T23:30:01.371Z]  INFO: zpsend/12376 on smos-01: sending init message to server
+[2017-05-07T23:30:01.377Z]  INFO: zpsend/12376 on smos-01: received an init acknowledge from server
+[2017-05-07T23:30:01.377Z]  INFO: zpsend/12376 on smos-01: requesting server to get zfs snapshot list for zones/test
+[2017-05-07T23:30:01.404Z]  INFO: zpsend/12376 on smos-01: received snapshots for zones/test filesystem from server
+[2017-05-07T23:30:01.404Z]  INFO: zpsend/12376 on smos-01: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
+[2017-05-07T23:30:01.430Z]  INFO: zpsend/12376 on smos-01: found snapshots on my filesystem zones/test
+[2017-05-07T23:30:01.430Z]  INFO: zpsend/12376 on smos-01: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
+[2017-05-07T23:30:01.430Z]  INFO: zpsend/12376 on smos-01: the server has all my snapshots, synchronization is complete
+[2017-05-07T23:30:01.430Z]  INFO: zpsend/12376 on smos-01: my snapshots: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
+[2017-05-07T23:30:01.430Z]  INFO: zpsend/12376 on smos-01: server snapshots: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
+[2017-05-07T23:30:01.430Z]  INFO: zpsend/12376 on smos-01: requesting server to end connection
+[2017-05-07T23:30:01.432Z]  INFO: zpsend/12376 on smos-01: server closed my connection
 ```
