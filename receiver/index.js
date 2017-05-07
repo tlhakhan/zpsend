@@ -6,14 +6,15 @@ const log = require('../common/logger');
 
 const server = net.createServer();
 
+let port = process.env.ZPORT || 6830;
+
 server.on('connection', (socket) => connectionListener(socket))
     .on('error', (err) => {
         log.error(err);
     });
 
 server.listen({
-    host: '0.0.0.0',
-    port: 6830
+    port
 }, () => {
     let {
         address,

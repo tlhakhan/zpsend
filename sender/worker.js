@@ -139,11 +139,11 @@ class Worker extends EventEmitter {
 
 
 
-function connection(client) {
+function connection(client, filesystem) {
     log.debug('connected to server');
 
     log.debug('creating a worker object');
-    const myWorker = new Worker(client, testFs);
+    const myWorker = new Worker(client, filesystem);
 
     log.info('sending init message to server');
     client.write(message(INIT, null));
