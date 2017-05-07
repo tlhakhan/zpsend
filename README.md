@@ -14,6 +14,8 @@
 ```
 
 ## End state
+- discrepancy in used size is due to smos-00 running lz4 compression, and smos-01 using no compression.
+- there is only /dev/zero'd files, so compression is very good.
 ```
 [root@smos-00 /zones/zpsend]# zfs list -r -t all zones/test
 NAME               USED  AVAIL  REFER  MOUNTPOINT
