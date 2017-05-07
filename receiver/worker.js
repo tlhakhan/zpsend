@@ -27,7 +27,7 @@ class Worker extends EventEmitter {
         this.on(INIT, (data) => {
             // data is expected to be null.
             log.info('received an init message from client');
-            log.info('sending an init message to client');
+            log.info('sending an init acknowledge to client');
             this.socket.write(message(INIT, null));
         });
 
@@ -46,29 +46,38 @@ class Worker extends EventEmitter {
             /*
             fs = {
               name: filesystem name
-              incremental:  true| false
-              snapshot: [initial | from - to]
+              incremental:  true | false
+              snapFrom: snapshot name | if incremental is true
+              snapTo: snapshot name | if incremental is true
+              initialSnap: initial snapshot name | if incremental is false
             }
             */
-            log.info('received a start zfs recv process message from client');
+            log.info('received start zfs recv message from client');
             // starting up recv
-            if (fs.incremental) log.info('incremental send');
+
             getZfsRecvStream(fs, (proc) => {
-                this.socket.pipe(proc.stdin).on('finish', () => {
+                this.socket.pipe(proc.stdin);
+                proc.stdin.on('finish', () => {
                     log.debug('finished receiving the filesystem %s', fs.name);
-                    log.info('telling client receive is done.');
                     this.socket.resume();
+                    log.info('notifying client zfs recv is done');
                     this.socket.write(message(RECV_DONE, fs));
                 });
 
+                proc.on('error', (err) => {
+                    log.error('zfs recv process errored out with %s', err);
+                    this.socket.end();
+                });
+
                 // tell the client ready to recvFs
+                log.info('notifying client ready to zfs recv data');
                 this.socket.write(message(RECV_START, fs));
             });
 
         });
 
         this.on(END, () => {
-            log.info('client is finished, politely asked to end connection');
+            log.info('client is finished sending, politely asked to end connection');
             this.socket.end();
         });
     }
