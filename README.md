@@ -1,11 +1,21 @@
 ## Progress Notes
 
 ### Objectives
-- Given a filesystem clone or real, send over all descendant snapshots,
-- Perform snapshot sending using only -i during incremental, this is so that -I doesn't block the deletion of older snapshots as a long sync is in progress.
-- Receiver can handle multiple independent recvs
-- Receiver will lock recvs to duplicate filesystems
-- Client is smart, server - not so much.
+- Create a zfs recv daemon server.
+  - The daemon will always be running, servicing zfs sends into the server's storage.
+  - Security layer can be easily implemented on the net.Socket layer.
+- Create a zfs send client.
+- Create a robust state machine between the server and client.
+  - See ```common/messages``` for messages communicated between the server and client.
+  - See ```common/library``` for function libraries that is used between server and client.
+    - This contains the setting up a zfs send or zfs recv child processes, and then hooking up the socket's stream into it during appropriate times.
+- Client is slightly smart, server - not so much.
+  - Client determines if it needs to perform a zfs incremental or initial snapshot send.
+  - Client determines common snapshot list and identifies when it's completed syncing.
+- Server gives what client wants most of the time.
+  - Server will setup the zfs recv process and then tell the client when the socket is ready for a zfs stream.
+- Do performance testing, and node cluster testing.
+  - Use node cluster to setup multiple zfs recv daemons? -- Central locking scheme may be required for potential duplicate zfs send|recvs.
 
 ## Starting Up
 ```
