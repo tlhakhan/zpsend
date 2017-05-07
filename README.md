@@ -7,7 +7,7 @@
 - client is smart, server - not so much.
 
 ### Server -- Receiver
-```bash
+```
 [root@smos-00 /zones/zpsend]# node receiver/ | bunyan
 [2017-05-07T16:21:47.805Z]  INFO: zpsend/55809 on smos-00: listening IPv4: 0.0.0.0:6830
 [2017-05-07T16:21:51.179Z]  INFO: zpsend/55809 on smos-00: received an init message from client
