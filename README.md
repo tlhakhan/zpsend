@@ -124,7 +124,8 @@ zones/test@4387       0      -  1.04M  -
 
 ## Client -- Example Output
 ```
-[root@smos-01 /zones/zpsend]# ZHOST=192.168.100.220 node sender| bunyan[2017-05-07T23:26:42.206Z]  INFO: zpsend/12338 on smos-01: sending init message to server
+[root@smos-01 /zones/zpsend]# ZHOST=192.168.100.220 node sender| bunyan
+[2017-05-07T23:26:42.206Z]  INFO: zpsend/12338 on smos-01: sending init message to server
 [2017-05-07T23:26:42.216Z]  INFO: zpsend/12338 on smos-01: received an init acknowledge from server
 [2017-05-07T23:26:42.216Z]  INFO: zpsend/12338 on smos-01: requesting server to get zfs snapshot list for zones/test
 [2017-05-07T23:26:42.249Z]  INFO: zpsend/12338 on smos-01: received snapshots for zones/test filesystem from server
