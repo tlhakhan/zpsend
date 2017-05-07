@@ -110,7 +110,7 @@ class Worker extends EventEmitter {
         this.on(RECV_DONE, (recvFs) => {
             if (recvFs.incremental) {
                 log.info('server said it successfully received incremental snapshot into %s', recvFs.name);
-                log.info('incremental snapshot: %s - %s', recvFs.from, recvFs.to);
+                log.info('incremental snapshot: %s - %s', recvFs.snapFrom, recvFs.snapTo);
             } else {
                 log.info('server said it successfully received snapshot into %s', recvFs.name);
                 log.info('initial snapshot: %s', recvFs.initial);
