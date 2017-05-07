@@ -113,7 +113,7 @@ class Worker extends EventEmitter {
                 log.info('incremental snapshot: %s - %s', recvFs.snapFrom, recvFs.snapTo);
             } else {
                 log.info('server said it successfully received snapshot into %s', recvFs.name);
-                log.info('initial snapshot: %s', recvFs.initial);
+                log.info('initial snapshot: %s', recvFs.snapInitial);
             }
             log.info('sending init message to server');
             this.client.write(message(INIT, null));

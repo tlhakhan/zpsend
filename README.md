@@ -29,68 +29,115 @@ zones/test@4387       0      -  1.04M  -
 
 ## Server -- Output
 ```
-[2017-05-07T19:28:33.529Z]  INFO: zpsend/21255 on smos-00: listening IPv4: 0.0.0.0:6830
-[2017-05-07T19:28:36.225Z]  INFO: zpsend/21255 on smos-00: received an init message from client
-[2017-05-07T19:28:36.225Z]  INFO: zpsend/21255 on smos-00: sending an init message to client
-[2017-05-07T19:28:36.230Z]  INFO: zpsend/21255 on smos-00: received a get snapshot list message from client for zones/test
-[2017-05-07T19:28:36.262Z]  INFO: zpsend/21255 on smos-00: sending client a list of snapshot for zones/test
-[2017-05-07T19:28:36.262Z]  INFO: zpsend/21255 on smos-00:
-[2017-05-07T19:28:36.298Z]  INFO: zpsend/21255 on smos-00: received a start zfs recv process message from client
-[2017-05-07T19:28:36.405Z]  INFO: zpsend/21255 on smos-00: telling client receive is done.
-[2017-05-07T19:28:36.408Z]  INFO: zpsend/21255 on smos-00: received an init message from client
-[2017-05-07T19:28:36.408Z]  INFO: zpsend/21255 on smos-00: sending an init message to client
-[2017-05-07T19:28:36.408Z]  INFO: zpsend/21255 on smos-00: received a get snapshot list message from client for zones/test
-[2017-05-07T19:28:36.432Z]  INFO: zpsend/21255 on smos-00: sending client a list of snapshot for zones/test
-[2017-05-07T19:28:36.432Z]  INFO: zpsend/21255 on smos-00: zones/test@now
-[2017-05-07T19:28:36.455Z]  INFO: zpsend/21255 on smos-00: received a start zfs recv process message from client
-[2017-05-07T19:28:36.455Z]  INFO: zpsend/21255 on smos-00: incremental send
-[2017-05-07T19:28:36.536Z]  INFO: zpsend/21255 on smos-00: telling client receive is done.
-[2017-05-07T19:28:36.537Z]  INFO: zpsend/21255 on smos-00: received an init message from client
-[2017-05-07T19:28:36.537Z]  INFO: zpsend/21255 on smos-00: sending an init message to client
-[2017-05-07T19:28:36.538Z]  INFO: zpsend/21255 on smos-00: received a get snapshot list message from client for zones/test
-[2017-05-07T19:28:36.561Z]  INFO: zpsend/21255 on smos-00: sending client a list of snapshot for zones/test
-[2017-05-07T19:28:36.561Z]  INFO: zpsend/21255 on smos-00: zones/test@now, zones/test@now2
-[2017-05-07T19:28:36.585Z]  INFO: zpsend/21255 on smos-00: received a start zfs recv process message from client
-[2017-05-07T19:28:36.585Z]  INFO: zpsend/21255 on smos-00: incremental send
-[2017-05-07T19:28:36.671Z]  INFO: zpsend/21255 on smos-00: telling client receive is done.
-[2017-05-07T19:28:36.673Z]  INFO: zpsend/21255 on smos-00: received an init message from client
-[2017-05-07T19:28:36.673Z]  INFO: zpsend/21255 on smos-00: sending an init message to client
-[2017-05-07T19:28:36.673Z]  INFO: zpsend/21255 on smos-00: received a get snapshot list message from client for zones/test
-[2017-05-07T19:28:36.696Z]  INFO: zpsend/21255 on smos-00: sending client a list of snapshot for zones/test
-[2017-05-07T19:28:36.697Z]  INFO: zpsend/21255 on smos-00: zones/test@now, zones/test@now2, zones/test@8550
-[2017-05-07T19:28:36.725Z]  INFO: zpsend/21255 on smos-00: received a start zfs recv process message from client
-[2017-05-07T19:28:36.725Z]  INFO: zpsend/21255 on smos-00: incremental send
-[2017-05-07T19:28:36.795Z]  INFO: zpsend/21255 on smos-00: telling client receive is done.
-[2017-05-07T19:28:36.797Z]  INFO: zpsend/21255 on smos-00: received an init message from client
-[2017-05-07T19:28:36.797Z]  INFO: zpsend/21255 on smos-00: sending an init message to client
-[2017-05-07T19:28:36.798Z]  INFO: zpsend/21255 on smos-00: received a get snapshot list message from client for zones/test
-[2017-05-07T19:28:36.820Z]  INFO: zpsend/21255 on smos-00: sending client a list of snapshot for zones/test
-[2017-05-07T19:28:36.820Z]  INFO: zpsend/21255 on smos-00: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569
-[2017-05-07T19:28:36.846Z]  INFO: zpsend/21255 on smos-00: received a start zfs recv process message from client
-[2017-05-07T19:28:36.846Z]  INFO: zpsend/21255 on smos-00: incremental send
-[2017-05-07T19:28:36.931Z]  INFO: zpsend/21255 on smos-00: telling client receive is done.
-[2017-05-07T19:28:36.932Z]  INFO: zpsend/21255 on smos-00: received an init message from client
-[2017-05-07T19:28:36.932Z]  INFO: zpsend/21255 on smos-00: sending an init message to client
-[2017-05-07T19:28:36.933Z]  INFO: zpsend/21255 on smos-00: received a get snapshot list message from client for zones/test
-[2017-05-07T19:28:36.957Z]  INFO: zpsend/21255 on smos-00: sending client a list of snapshot for zones/test
-[2017-05-07T19:28:36.957Z]  INFO: zpsend/21255 on smos-00: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392
-[2017-05-07T19:28:36.982Z]  INFO: zpsend/21255 on smos-00: received a start zfs recv process message from client
-[2017-05-07T19:28:36.982Z]  INFO: zpsend/21255 on smos-00: incremental send
-[2017-05-07T19:28:37.102Z]  INFO: zpsend/21255 on smos-00: telling client receive is done.
-[2017-05-07T19:28:37.104Z]  INFO: zpsend/21255 on smos-00: received an init message from client
-[2017-05-07T19:28:37.104Z]  INFO: zpsend/21255 on smos-00: sending an init message to client
-[2017-05-07T19:28:37.104Z]  INFO: zpsend/21255 on smos-00: received a get snapshot list message from client for zones/test
-[2017-05-07T19:28:37.131Z]  INFO: zpsend/21255 on smos-00: sending client a list of snapshot for zones/test
-[2017-05-07T19:28:37.131Z]  INFO: zpsend/21255 on smos-00: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577
-[2017-05-07T19:28:37.154Z]  INFO: zpsend/21255 on smos-00: received a start zfs recv process message from client
-[2017-05-07T19:28:37.154Z]  INFO: zpsend/21255 on smos-00: incremental send
-[2017-05-07T19:28:37.224Z]  INFO: zpsend/21255 on smos-00: telling client receive is done.
-[2017-05-07T19:28:37.229Z]  INFO: zpsend/21255 on smos-00: received an init message from client
-[2017-05-07T19:28:37.229Z]  INFO: zpsend/21255 on smos-00: sending an init message to client
-[2017-05-07T19:28:37.230Z]  INFO: zpsend/21255 on smos-00: received a get snapshot list message from client for zones/test
-[2017-05-07T19:28:37.259Z]  INFO: zpsend/21255 on smos-00: sending client a list of snapshot for zones/test
-[2017-05-07T19:28:37.259Z]  INFO: zpsend/21255 on smos-00: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
-[2017-05-07T19:28:37.283Z]  INFO: zpsend/21255 on smos-00: client is finished, politely asked to end connection
+[2017-05-07T19:32:42.373Z]  INFO: zpsend/11935 on smos-01: sending init message to server
+[2017-05-07T19:32:42.382Z]  INFO: zpsend/11935 on smos-01: received an init message from server
+[2017-05-07T19:32:42.382Z]  INFO: zpsend/11935 on smos-01: asking server to get snapshot list for zones/test
+[2017-05-07T19:32:42.417Z]  INFO: zpsend/11935 on smos-01: received snapshots for zones/test filesystem from server
+[2017-05-07T19:32:42.417Z]  INFO: zpsend/11935 on smos-01:
+[2017-05-07T19:32:42.450Z]  INFO: zpsend/11935 on smos-01: found the following snapshots on my filesystem zones/test
+[2017-05-07T19:32:42.450Z]  INFO: zpsend/11935 on smos-01: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
+[2017-05-07T19:32:42.451Z]  INFO: zpsend/11935 on smos-01: an initial seed needed
+[2017-05-07T19:32:42.451Z]  INFO: zpsend/11935 on smos-01: initial snapshot: zones/test@now
+[2017-05-07T19:32:42.451Z]  INFO: zpsend/11935 on smos-01: asking the server to start up a recv for zones/test
+[2017-05-07T19:32:42.471Z]  INFO: zpsend/11935 on smos-01: received a ready zfs recv message from server
+[2017-05-07T19:32:42.526Z]  INFO: zpsend/11935 on smos-01: server said it successfully received snapshot into zones/test
+[2017-05-07T19:32:42.526Z]  INFO: zpsend/11935 on smos-01: initial snapshot: zones/test@now
+[2017-05-07T19:32:42.526Z]  INFO: zpsend/11935 on smos-01: sending init message to server
+[2017-05-07T19:32:42.526Z]  INFO: zpsend/11935 on smos-01: received an init message from server
+[2017-05-07T19:32:42.527Z]  INFO: zpsend/11935 on smos-01: asking server to get snapshot list for zones/test
+[2017-05-07T19:32:42.550Z]  INFO: zpsend/11935 on smos-01: received snapshots for zones/test filesystem from server
+[2017-05-07T19:32:42.550Z]  INFO: zpsend/11935 on smos-01: zones/test@now
+[2017-05-07T19:32:42.574Z]  INFO: zpsend/11935 on smos-01: found the following snapshots on my filesystem zones/test
+[2017-05-07T19:32:42.574Z]  INFO: zpsend/11935 on smos-01: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
+[2017-05-07T19:32:42.574Z]  INFO: zpsend/11935 on smos-01: an incremental send is needed
+[2017-05-07T19:32:42.574Z]  INFO: zpsend/11935 on smos-01: from: zones/test@now to: zones/test@now2
+[2017-05-07T19:32:42.574Z]  INFO: zpsend/11935 on smos-01: asking the server to start up a recv for zones/test
+[2017-05-07T19:32:42.574Z]  INFO: zpsend/11935 on smos-01: {"name":"zones/test","incremental":true,"snapFrom":"zones/test@now","snapTo":"zones/test@now2"}
+[2017-05-07T19:32:42.592Z]  INFO: zpsend/11935 on smos-01: received a ready zfs recv message from server
+[2017-05-07T19:32:42.680Z]  INFO: zpsend/11935 on smos-01: server said it successfully received incremental snapshot into zones/test
+[2017-05-07T19:32:42.680Z]  INFO: zpsend/11935 on smos-01: incremental snapshot: zones/test@now - zones/test@now2
+[2017-05-07T19:32:42.680Z]  INFO: zpsend/11935 on smos-01: sending init message to server
+[2017-05-07T19:32:42.681Z]  INFO: zpsend/11935 on smos-01: received an init message from server
+[2017-05-07T19:32:42.681Z]  INFO: zpsend/11935 on smos-01: asking server to get snapshot list for zones/test
+[2017-05-07T19:32:42.703Z]  INFO: zpsend/11935 on smos-01: received snapshots for zones/test filesystem from server
+[2017-05-07T19:32:42.703Z]  INFO: zpsend/11935 on smos-01: zones/test@now, zones/test@now2
+[2017-05-07T19:32:42.727Z]  INFO: zpsend/11935 on smos-01: found the following snapshots on my filesystem zones/test
+[2017-05-07T19:32:42.727Z]  INFO: zpsend/11935 on smos-01: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
+[2017-05-07T19:32:42.728Z]  INFO: zpsend/11935 on smos-01: an incremental send is needed
+[2017-05-07T19:32:42.728Z]  INFO: zpsend/11935 on smos-01: from: zones/test@now2 to: zones/test@8550
+[2017-05-07T19:32:42.728Z]  INFO: zpsend/11935 on smos-01: asking the server to start up a recv for zones/test
+[2017-05-07T19:32:42.728Z]  INFO: zpsend/11935 on smos-01: {"name":"zones/test","incremental":true,"snapFrom":"zones/test@now2","snapTo":"zones/test@8550"}
+[2017-05-07T19:32:42.751Z]  INFO: zpsend/11935 on smos-01: received a ready zfs recv message from server
+[2017-05-07T19:32:42.826Z]  INFO: zpsend/11935 on smos-01: server said it successfully received incremental snapshot into zones/test
+[2017-05-07T19:32:42.826Z]  INFO: zpsend/11935 on smos-01: incremental snapshot: zones/test@now2 - zones/test@8550
+[2017-05-07T19:32:42.826Z]  INFO: zpsend/11935 on smos-01: sending init message to server
+[2017-05-07T19:32:42.827Z]  INFO: zpsend/11935 on smos-01: received an init message from server
+[2017-05-07T19:32:42.827Z]  INFO: zpsend/11935 on smos-01: asking server to get snapshot list for zones/test
+[2017-05-07T19:32:42.851Z]  INFO: zpsend/11935 on smos-01: received snapshots for zones/test filesystem from server
+[2017-05-07T19:32:42.851Z]  INFO: zpsend/11935 on smos-01: zones/test@now, zones/test@now2, zones/test@8550
+[2017-05-07T19:32:42.872Z]  INFO: zpsend/11935 on smos-01: found the following snapshots on my filesystem zones/test
+[2017-05-07T19:32:42.872Z]  INFO: zpsend/11935 on smos-01: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
+[2017-05-07T19:32:42.872Z]  INFO: zpsend/11935 on smos-01: an incremental send is needed
+[2017-05-07T19:32:42.872Z]  INFO: zpsend/11935 on smos-01: from: zones/test@8550 to: zones/test@18569
+[2017-05-07T19:32:42.872Z]  INFO: zpsend/11935 on smos-01: asking the server to start up a recv for zones/test
+[2017-05-07T19:32:42.872Z]  INFO: zpsend/11935 on smos-01: {"name":"zones/test","incremental":true,"snapFrom":"zones/test@8550","snapTo":"zones/test@18569"}
+[2017-05-07T19:32:42.891Z]  INFO: zpsend/11935 on smos-01: received a ready zfs recv message from server
+[2017-05-07T19:32:42.940Z]  INFO: zpsend/11935 on smos-01: server said it successfully received incremental snapshot into zones/test
+[2017-05-07T19:32:42.940Z]  INFO: zpsend/11935 on smos-01: incremental snapshot: zones/test@8550 - zones/test@18569
+[2017-05-07T19:32:42.940Z]  INFO: zpsend/11935 on smos-01: sending init message to server
+[2017-05-07T19:32:42.941Z]  INFO: zpsend/11935 on smos-01: received an init message from server
+[2017-05-07T19:32:42.941Z]  INFO: zpsend/11935 on smos-01: asking server to get snapshot list for zones/test
+[2017-05-07T19:32:42.965Z]  INFO: zpsend/11935 on smos-01: received snapshots for zones/test filesystem from server
+[2017-05-07T19:32:42.965Z]  INFO: zpsend/11935 on smos-01: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569
+[2017-05-07T19:32:42.986Z]  INFO: zpsend/11935 on smos-01: found the following snapshots on my filesystem zones/test
+[2017-05-07T19:32:42.987Z]  INFO: zpsend/11935 on smos-01: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
+[2017-05-07T19:32:42.987Z]  INFO: zpsend/11935 on smos-01: an incremental send is needed
+[2017-05-07T19:32:42.987Z]  INFO: zpsend/11935 on smos-01: from: zones/test@18569 to: zones/test@20392
+[2017-05-07T19:32:42.987Z]  INFO: zpsend/11935 on smos-01: asking the server to start up a recv for zones/test
+[2017-05-07T19:32:42.987Z]  INFO: zpsend/11935 on smos-01: {"name":"zones/test","incremental":true,"snapFrom":"zones/test@18569","snapTo":"zones/test@20392"}
+[2017-05-07T19:32:43.005Z]  INFO: zpsend/11935 on smos-01: received a ready zfs recv message from server
+[2017-05-07T19:32:43.104Z]  INFO: zpsend/11935 on smos-01: server said it successfully received incremental snapshot into zones/test
+[2017-05-07T19:32:43.104Z]  INFO: zpsend/11935 on smos-01: incremental snapshot: zones/test@18569 - zones/test@20392
+[2017-05-07T19:32:43.104Z]  INFO: zpsend/11935 on smos-01: sending init message to server
+[2017-05-07T19:32:43.105Z]  INFO: zpsend/11935 on smos-01: received an init message from server
+[2017-05-07T19:32:43.105Z]  INFO: zpsend/11935 on smos-01: asking server to get snapshot list for zones/test
+[2017-05-07T19:32:43.129Z]  INFO: zpsend/11935 on smos-01: received snapshots for zones/test filesystem from server
+[2017-05-07T19:32:43.129Z]  INFO: zpsend/11935 on smos-01: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392
+[2017-05-07T19:32:43.150Z]  INFO: zpsend/11935 on smos-01: found the following snapshots on my filesystem zones/test
+[2017-05-07T19:32:43.150Z]  INFO: zpsend/11935 on smos-01: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
+[2017-05-07T19:32:43.150Z]  INFO: zpsend/11935 on smos-01: an incremental send is needed
+[2017-05-07T19:32:43.151Z]  INFO: zpsend/11935 on smos-01: from: zones/test@20392 to: zones/test@30577
+[2017-05-07T19:32:43.151Z]  INFO: zpsend/11935 on smos-01: asking the server to start up a recv for zones/test
+[2017-05-07T19:32:43.151Z]  INFO: zpsend/11935 on smos-01: {"name":"zones/test","incremental":true,"snapFrom":"zones/test@20392","snapTo":"zones/test@30577"}
+[2017-05-07T19:32:43.169Z]  INFO: zpsend/11935 on smos-01: received a ready zfs recv message from server
+[2017-05-07T19:32:43.275Z]  INFO: zpsend/11935 on smos-01: server said it successfully received incremental snapshot into zones/test
+[2017-05-07T19:32:43.277Z]  INFO: zpsend/11935 on smos-01: incremental snapshot: zones/test@20392 - zones/test@30577
+[2017-05-07T19:32:43.277Z]  INFO: zpsend/11935 on smos-01: sending init message to server
+[2017-05-07T19:32:43.277Z]  INFO: zpsend/11935 on smos-01: received an init message from server
+[2017-05-07T19:32:43.278Z]  INFO: zpsend/11935 on smos-01: asking server to get snapshot list for zones/test
+[2017-05-07T19:32:43.302Z]  INFO: zpsend/11935 on smos-01: received snapshots for zones/test filesystem from server
+[2017-05-07T19:32:43.302Z]  INFO: zpsend/11935 on smos-01: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577
+[2017-05-07T19:32:43.324Z]  INFO: zpsend/11935 on smos-01: found the following snapshots on my filesystem zones/test
+[2017-05-07T19:32:43.324Z]  INFO: zpsend/11935 on smos-01: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
+[2017-05-07T19:32:43.324Z]  INFO: zpsend/11935 on smos-01: an incremental send is needed
+[2017-05-07T19:32:43.324Z]  INFO: zpsend/11935 on smos-01: from: zones/test@30577 to: zones/test@4387
+[2017-05-07T19:32:43.324Z]  INFO: zpsend/11935 on smos-01: asking the server to start up a recv for zones/test
+[2017-05-07T19:32:43.324Z]  INFO: zpsend/11935 on smos-01: {"name":"zones/test","incremental":true,"snapFrom":"zones/test@30577","snapTo":"zones/test@4387"}
+[2017-05-07T19:32:43.343Z]  INFO: zpsend/11935 on smos-01: received a ready zfs recv message from server
+[2017-05-07T19:32:43.449Z]  INFO: zpsend/11935 on smos-01: server said it successfully received incremental snapshot into zones/test
+[2017-05-07T19:32:43.449Z]  INFO: zpsend/11935 on smos-01: incremental snapshot: zones/test@30577 - zones/test@4387
+[2017-05-07T19:32:43.449Z]  INFO: zpsend/11935 on smos-01: sending init message to server
+[2017-05-07T19:32:43.454Z]  INFO: zpsend/11935 on smos-01: received an init message from server
+[2017-05-07T19:32:43.454Z]  INFO: zpsend/11935 on smos-01: asking server to get snapshot list for zones/test
+[2017-05-07T19:32:43.479Z]  INFO: zpsend/11935 on smos-01: received snapshots for zones/test filesystem from server
+[2017-05-07T19:32:43.480Z]  INFO: zpsend/11935 on smos-01: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
+[2017-05-07T19:32:43.502Z]  INFO: zpsend/11935 on smos-01: found the following snapshots on my filesystem zones/test
+[2017-05-07T19:32:43.502Z]  INFO: zpsend/11935 on smos-01: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
+[2017-05-07T19:32:43.502Z]  INFO: zpsend/11935 on smos-01: the server has all my snapshots
+[2017-05-07T19:32:43.502Z]  INFO: zpsend/11935 on smos-01: my snapshots: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
+[2017-05-07T19:32:43.502Z]  INFO: zpsend/11935 on smos-01: server snapshots: zones/test@now, zones/test@now2, zones/test@8550, zones/test@18569, zones/test@20392, zones/test@30577, zones/test@4387
+[2017-05-07T19:32:43.502Z]  INFO: zpsend/11935 on smos-01: asking server to end connection
+[2017-05-07T19:32:43.504Z]  INFO: zpsend/11935 on smos-01: server closed my connection
 ```
 
 ## Client -- Example
