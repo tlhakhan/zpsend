@@ -1,37 +1,18 @@
 'use strict';
 
-let net = require('net');
-let msgpack = require('msgpack-lite');
-let {
-    INIT,
-    LIST,
-    ERROR,
-    RECV_START,
-    RECV_DONE,
-    UNKNOWN,
-    DONE
-} = require('../common/messages');
+const net = require('net');
+const log = require('../common/logger');
+const connection = require('./worker');
 
-const {
-    getSnapshotList,
-    getZfsSendStream
-} = require('../common/library');
+const testFs = 'zones/test';
 
 const client = net.createConnection({
     port: 6830,
     host: '192.168.100.220'
-}, () => {
-    console.log('connected');
-});
+}, () => connection(client));
 
-const testFs = 'zones/test';
 
-client.on('connect', () => {
-    client.write(msgpack.encode({
-        type: INIT
-    }));
-});
-
+/*
 client.on('data', (data) => {
     let message = msgpack.decode(data);
     if (message.type) {
@@ -77,12 +58,12 @@ client.on('data', (data) => {
                             // need to find common snapshot
                             let commonList = [];
 
-                            for (let i = 0; i <= list.length; i++ ) {
-                              if (message.list[i] === list[i]) {
-                                  commonList[i] = list[i];
-                              } else {
-                                break;
-                              }
+                            for (let i = 0; i <= list.length; i++) {
+                                if (message.list[i] === list[i]) {
+                                    commonList[i] = list[i];
+                                } else {
+                                    break;
+                                }
                             }
 
                             // need to check if commonList is the same length as the soruce list
@@ -136,7 +117,4 @@ client.on('data', (data) => {
         }
     }
 });
-
-client.on('close', () => {
-    console.log('connection closed');
-});
+*/

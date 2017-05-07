@@ -24,9 +24,11 @@ client <= end <= server
 module.exports = {
     'INIT': 'INIT',
     'LIST': 'LIST',
+    'SNAPSHOT_LIST': 'SNAPSHOT_LIST',
+    'GET_SNAPSHOT_LIST': 'GET_SNAPSHOT_LIST',
     'RECV_START': 'RECV_START',
     'RECV_DONE': 'RECV_DONE',
     'END': 'END',
-    'ERROR':'ERROR',
-    'DONE':'DONE'
+    'ERROR': 'ERROR',
+    'DONE': 'DONE'
 };
