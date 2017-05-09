@@ -8,6 +8,7 @@ const {
     GET_SNAPSHOT_LIST,
     RECV_START,
     RECV_DONE,
+    ERROR,
     END
 } = require('../common/messages');
 
@@ -35,8 +36,12 @@ class Worker extends EventEmitter {
             // data is expected to be an object.
             log.info('received a get snapshot list message from client for %s', fs.name);
             getSnapshotList(fs, (fs) => {
-                log.info('sending client a list of snapshot for %s', fs.name);
-                log.info(fs.list.join(', '));
+                if (fs.list.length === 0) {
+                    log.info('client requested filesystem %s has no snapshots', fs.name);
+                } else {
+                    log.info('found snapshots on client requested filesystem %s', fs.name);
+                    log.info(fs.list.join(', '));
+                }
                 this.socket.write(message(SNAPSHOT_LIST, fs));
             });
         });
@@ -57,16 +62,30 @@ class Worker extends EventEmitter {
 
             getZfsRecvStream(fs, (proc) => {
                 this.socket.pipe(proc.stdin);
+
+                let errorMessage = [];
+
                 proc.stdin.on('finish', () => {
-                    log.debug('finished receiving the filesystem %s', fs.name);
-                    this.socket.resume();
-                    log.info('notifying client zfs recv is done');
-                    this.socket.write(message(RECV_DONE, fs));
+                    log.debug('zfs recv process stdin has finished');
                 });
 
-                proc.on('error', (err) => {
-                    log.error('zfs recv process errored out with %s', err);
-                    this.socket.end();
+                proc.stderr.setEncoding('utf8');
+                proc.stderr.on('data', (data) => {
+                  errorMessage.push(data.replace(/\n/, '').trim());
+                });
+
+                proc.on('exit', (code, signal) => {
+                    if (code === 0) {
+                        log.debug('successfully finished receiving the filesystem %s', fs.name);
+                        this.socket.resume();
+                        log.info('notifying client zfs recv is done');
+                        this.socket.write(message(RECV_DONE, fs));
+                    } else {
+                        log.error('zfs recv process errored out with %s', code);
+                        log.error('zfs recv process said: %s', errorMessage.join(' '));
+                        this.socket.resume();
+                        this.socket.write(message(ERROR, errorMessage));
+                    }
                 });
 
                 // tell the client ready to recvFs

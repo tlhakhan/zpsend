@@ -8,6 +8,7 @@ const {
     SNAPSHOT_LIST,
     RECV_START,
     RECV_DONE,
+    ERROR,
     END
 } = require('../common/messages');
 
@@ -38,8 +39,13 @@ class Worker extends EventEmitter {
 
         this.on(SNAPSHOT_LIST, (remote) => {
             // data is expected to be an object.
-            log.info('received snapshots for %s filesystem from server', remote.name);
-            log.info(remote.list.join(', '));
+
+            if (remote.list.length === 0) {
+                log.info('server has no snapshots on %s filesystem', remote.name);
+            } else {
+                log.info('received snapshots for %s filesystem from server', remote.name);
+                log.info(remote.list.join(', '));
+            }
 
             // check if either list is empty
             // if my list is empty, then exit, need initial snapshot
@@ -48,59 +54,87 @@ class Worker extends EventEmitter {
             // if all snapshots match, then no work.
             // if nothing is in common, then log on server side asking politely to destroy fs.
 
+
+            // snapshot scenarios
+            // 1. my list is  empty
+            // 1.1 stop client -- need first snapshot
+
+            // 2. my list is not empty, server list is empty
+            // 2.1 server needs initial seed snapshot
+
+            // 3. my list is not empty, server list is not empty
+            // 3.1 find common list
+
+            // 4. common list is empty and server list is not empty
+            // 4.1 destination has foreign snapshots -- notify server to destroy its filesystem
+
+            // 5. common list is not empty and server list length is shorter than common list length
+            // 5.1 server needs incremental snapshot from the last item in common list and my list [commonList.length]
+
+            // 6. common list is not empty and server list length is greater than common list length
+            // 6.1 server has more snapshots than my snapshots
+            // 6.2 ensure that the last snapshot on the server is the last snapshot in the common list
+            // 6.3 if the last item match, then proceed with 5.
+            // 6.4 if the last item does not match, then stop client.  -- the server has newer snapshots than my list.
+
             // get my snapshots
             getSnapshotList(this.fs, (fs) => {
                 if (fs.list.length === 0) {
                     // my list is empty
                     log.error('no snapshots found on my filesystem %s', this.fs.name);
-                    log.error('please create an inital snapshot the filesystem');
-                    this.client.end();
-                } else {
+                    log.info('requesting server to end my connection');
+                    this.client.write(message(END, null));
+                } else if (fs.list.length > 0 && remote.list.length === 0) {
+                    // needs initial seed snapshots
+                    log.info('server needs an initial seed needed');
+                    log.info('server will be receiving an initial snapshot [ %s ]', fs.list[0]);
+                    let recvFs = {
+                        name: this.fs.name,
+                        incremental: false,
+                        snapInitial: [fs.list[0]]
+                    };
+                    log.info('requesting the server to start up a zfs recv for %s', recvFs.name);
+                    this.client.write(message(RECV_START, recvFs));
+                } else if (fs.list.length > 0 && remote.list.length > 0) {
+                    // both lists are not empty, need to find common list
                     log.info('found snapshots on my filesystem %s', this.fs.name);
                     log.info(fs.list.join(', '));
 
+                    log.info('finding a common list of snapshots');
                     // finding a common snapshots
-                    let commonList = remote.list.filter((snapshot, index) => {
-                        if (remote.list[index] && snapshot === fs.list[index]) {
-                            return true;
-                        } else {
+                    let commonList = fs.list.filter((mySnapshot) => {
+                        return remote.list.some((remoteSnapshot) => {
+                            if (mySnapshot === remoteSnapshot) return true;
                             return false;
-                        }
+                        });
                     });
+                    log.info('common list: %s', commonList.join(', '));
 
-                    if (commonList.length === 0) {
-                        // initial seed to server needed.
-                        log.info('server needs an initial seed needed');
-                        log.info('server will be receiving an initial snapshot: %s', fs.list[0]);
-                        let recvFs = {
-                            name: this.fs.name,
-                            incremental: false,
-                            snapInitial: [fs.list[0]]
-                        };
-
-                        log.info('requesting the server to start up a zfs recv for %s', recvFs.name);
-                        this.client.write(message(RECV_START, recvFs));
-
-                    } else if (commonList.length === fs.list.length) {
-                        // the remote list has everything in my snapshot list
+                    if (commonList.length === 0 && remote.list.length > 0) {
+                        // no common list found, but server has snapshots
+                        log.info('server has no common snapshot');
+                        log.info('requesting server to end my connection');
+                        this.client.write(message(END, null));
+                    } else if (commonList.length === fs.list.length || fs.list[fs.list.length - 1] === remote.list[remote.list.length - 1]) {
+                        // remote list has everything in my list or the last snapshot in my list matches the remote list's last snapshot
                         log.info('the server has all my snapshots, synchronization is complete');
                         log.info('my snapshots: %s', fs.list.join(', '));
                         log.info('server snapshots: %s', remote.list.join(', '));
 
                         log.info('requesting server to end connection');
                         this.client.write(message(END, null));
-                    } else {
-                        // incremental snapshot needed, find the oldest common snapshot
+                    } else if (commonList.length > 0 && commonList[commonList.length - 1] === remote.list[remote.list.length - 1]) {
+                        // incremental send is needed
                         log.info('server needs an incremental send')
-                        log.info('server will be receiving a snapshot from: %s to: %s', commonList[commonList.length - 1], fs.list[commonList.length]);
+                        log.info('server will be receiving a snapshot [ from: %s | to: %s ]', commonList[commonList.length - 1], fs.list[fs.list.indexOf(commonList[commonList.length - 1]) + 1]);
                         let recvFs = {
                             name: this.fs.name,
                             incremental: true,
                             snapFrom: commonList[commonList.length - 1],
-                            snapTo: fs.list[commonList.length]
+                            snapTo: fs.list[fs.list.indexOf(commonList[commonList.length - 1]) + 1]
                         };
                         log.info('requesting the server to start up a zfs recv for %s', recvFs.name);
-                        log.info(JSON.stringify(recvFs));
+                        log.debug(JSON.stringify(recvFs));
                         this.client.write(message(RECV_START, recvFs));
                     }
                 }
@@ -121,9 +155,10 @@ class Worker extends EventEmitter {
 
         this.on(RECV_START, (recvFs) => {
             // data is expected to be an object.
-            log.info('received a ready zfs recv message from server');
+            log.info('server notified that it is a ready to zfs recv');
 
             getZfsSendStream(recvFs, (proc) => {
+                log.info('successfully set up a zfs send process');
                 proc.stdout.on('data', (data) => {
                     this.client.write(data);
                 });
@@ -133,6 +168,13 @@ class Worker extends EventEmitter {
                     log.debug('zfs send process finished with code: %s', code);
                 });
             });
+        });
+
+        this.on(ERROR, (error) => {
+            log.error('server returned error: %s', error);
+
+            log.info('requesting server to end connection');
+            this.client.write(message(END, null));
         });
     }
 }
