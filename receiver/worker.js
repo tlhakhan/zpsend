@@ -24,10 +24,23 @@ class Worker extends EventEmitter {
     constructor(socket) {
         super();
         this.socket = socket;
-
+        
+        this.messageProcessor = (data) => {
+            log.debug('received data on socket');
+            let message = msgpack.decode(data);
+            if (message.type) {
+                log.debug('received valid message');
+                myWorker.emit(message.type, message.data);
+            }
+        }
+        
         this.on(INIT, (data) => {
             // data is expected to be null.
             log.info('received an init message from client');
+            
+            // setup the message processor
+            this.socket.on('data', this.messageProcessor);
+            
             log.info('sending an init acknowledge to client');
             this.socket.write(message(INIT, null));
         });
@@ -61,6 +74,9 @@ class Worker extends EventEmitter {
             // starting up recv
 
             getZfsRecvStream(fs, (proc) => {
+                // remove the message processing and dedicate to processing zfs data
+                this.socket.removeListener('data', this.messageProcessor);
+                
                 this.socket.pipe(proc.stdin);
 
                 let errorMessage = [];
@@ -77,11 +93,14 @@ class Worker extends EventEmitter {
                 proc.on('exit', (code, signal) => {
                     if (code === 0) {
                         log.debug('successfully finished receiving the filesystem %s', fs.name);
+                        // done receiving, switch to message processing
+                        this.socket.on('data', this.messageProcessor);
                         this.socket.resume();
                         log.info('notifying client zfs recv is done');
                         this.socket.write(message(RECV_DONE, fs));
                     } else {
                         log.error('zfs recv process errored out with %s', code);
+                        this.socket.on('data', this.messageProcessor);
                         log.error('zfs recv process said: %s', errorMessage.join(' '));
                         this.socket.resume();
                         this.socket.write(message(ERROR, errorMessage));
@@ -109,15 +128,7 @@ function connectionListener(socket) {
 
     log.debug('creating a worker object');
     const myWorker = new Worker(socket);
-
-    socket.on('data', (data) => {
-        log.debug('received data on socket');
-        let message = msgpack.decode(data);
-        if (message.type) {
-            log.debug('received valid message');
-            myWorker.emit(message.type, message.data);
-        }
-    });
+    
 }
 
 module.exports = connectionListener;
