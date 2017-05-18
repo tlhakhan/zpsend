@@ -30,12 +30,26 @@ class Worker extends EventEmitter {
         this.client = client;
         this.fs = filesystem;
 
+        this.messageProcessor = (data) => {
+           log.debug('received data on socket');
+            let message = msgpack.decode(data);
+            if (message.type) {
+                log.debug('received valid message');
+                myWorker.emit(message.type, message.data);
+            } 
+        }
+        
         this.on(INIT, (data) => {
             // data is expected to be null.
             log.info('received an init acknowledge from server');
+            
+            // setup a message listener
+            // switch board
+            this.client.on('data', this.messageProcessor);
+            
             log.info('requesting server to get zfs snapshot list for %s', this.fs.name);
             this.client.write(message(GET_SNAPSHOT_LIST, this.fs));
-        })
+        });
 
         this.on(SNAPSHOT_LIST, (remote) => {
             // data is expected to be an object.
@@ -158,7 +172,10 @@ class Worker extends EventEmitter {
         this.on(RECV_START, (recvFs) => {
             // data is expected to be an object.
             log.info('server notified that it is a ready to zfs recv');
-
+            
+            // the socket will be dedicated to receive
+            this.client.removeListener('data', this.messageProcessor);
+            
             getZfsSendStream(recvFs, (proc) => {
                 log.info('successfully set up a zfs send process');
                 proc.stdout.on('data', (data) => {
@@ -168,6 +185,8 @@ class Worker extends EventEmitter {
                 proc.on('close', (code) => {
                     // send completed
                     log.debug('zfs send process finished with code: %s', code);
+                    // the socket needs to be reverted to message processing
+                    this.client.on('data', this.messageProcessor);
                 });
             });
         });
@@ -191,16 +210,6 @@ function connection(client, filesystem) {
 
     log.info('sending init message to server');
     client.write(message(INIT, null));
-
-    // switch board
-    client.on('data', (data) => {
-        log.debug('received data on socket');
-        let message = msgpack.decode(data);
-        if (message.type) {
-            log.debug('received valid message');
-            myWorker.emit(message.type, message.data);
-        }
-    });
 
     client.on('close', () => {
         log.info('server closed my connection');
