@@ -58,6 +58,8 @@ class Worker extends EventEmitter {
             // snapshot scenarios
             // 1. my list is  empty
             // 1.1 stop client -- need first snapshot
+            // 1.2 notes: the operator may want to perform a recursive snapshot -- zfs snapshot -r [dataset_name]@zpsend
+            // 1.2 notes: the operator can perform -- zfs destroy -r [dataset_name]@zpsend -- to recursive remove the snapshot in one go.
 
             // 2. my list is not empty, server list is empty
             // 2.1 server needs initial seed snapshot
