@@ -38,15 +38,14 @@ class Worker extends EventEmitter {
                 this.emit(message.type, message.data);
             } 
         }
+          
+        // setup a message listener
+        // switch board
+        this.client.on('data', this.messageProcessor);
         
         this.on(INIT, (data) => {
             // data is expected to be null.
-            log.info('received an init acknowledge from server');
-            
-            // setup a message listener
-            // switch board
-            this.client.on('data', this.messageProcessor);
-            
+            log.info('received an init acknowledge from server');        
             log.info('requesting server to get zfs snapshot list for %s', this.fs.name);
             this.client.write(message(GET_SNAPSHOT_LIST, this.fs));
         });
