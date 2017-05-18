@@ -35,7 +35,7 @@ class Worker extends EventEmitter {
             let message = msgpack.decode(data);
             if (message.type) {
                 log.debug('received valid message');
-                myWorker.emit(message.type, message.data);
+                this.emit(message.type, message.data);
             } 
         }
         
