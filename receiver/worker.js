@@ -34,13 +34,12 @@ class Worker extends EventEmitter {
             }
         }
         
+        // setup the message processor
+        this.socket.on('data', this.messageProcessor);
+        
         this.on(INIT, (data) => {
             // data is expected to be null.
             log.info('received an init message from client');
-            
-            // setup the message processor
-            this.socket.on('data', this.messageProcessor);
-            
             log.info('sending an init acknowledge to client');
             this.socket.write(message(INIT, null));
         });
