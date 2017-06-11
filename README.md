@@ -1,4 +1,6 @@
 ## Progress Notes
+## Updates
+- I will be writing this in golang.
 
 ### Objectives
 - Create a zfs recv daemon server.
