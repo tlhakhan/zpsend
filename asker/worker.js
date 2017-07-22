@@ -42,14 +42,14 @@ class Worker extends EventEmitter {
             this.client.write(message(GET_SNAPSHOT_LIST, this.fs.remote));
         });
 
-        this.on(SNAPSHOT_LIST, (remote) => {
+        this.on(SNAPSHOT_LIST, (remoteSnapshotList) => {
             // data is expected to be an object.
 
-            if (remote.list.length === 0) {
-                log.info('server has no snapshots on %s filesystem', remote.name);
+            if (remoteSnapshotList.length === 0) {
+                log.info('server has no snapshots on %s filesystem', this.fs.remote);
             } else {
-                log.info('received snapshots for %s filesystem from server', remote.name);
-                log.info(remote.list.join(', '));
+                log.info('received snapshots for %s filesystem from server', this.fs.remote);
+                log.info(remoteSnapshotList.join(', '));
             }
 
             // check if either list is empty
@@ -85,63 +85,63 @@ class Worker extends EventEmitter {
             // 6.4 if the last item does not match, then stop client.  -- the server has newer snapshots than my list.
 
             // get my snapshots
-            getSnapshotList(this.fs.local, (fs) => {
-                if (fs.list.length === 0) {
+            getSnapshotList(this.fs.local, (localSnapshotList) => {
+                if (localSnapshotList.length === 0) {
                     // my list is empty
                     log.error('no snapshots found on my filesystem %s', this.fs.local);
                     log.info('requesting server to end my connection');
                     this.client.write(message(END, null));
-                } else if (fs.list.length > 0 && remote.list.length === 0) {
+                } else if (localSnapshotList.length > 0 && remoteSnapshotList.length === 0) {
                     // needs initial seed snapshots
                     log.info('server needs an initial seed needed');
-                    log.info('server will be receiving an initial snapshot [ %s ]', fs.list[0]);
+                    log.info('server will be receiving an initial snapshot [ %s ]', localSnapshotList[0]);
                     let recvFs = {
                         name: this.fs.remote,
                         incremental: false,
-                        snapInitial: [fs.list[0]]
+                        snapInitial: [localSnapshotList[0]]
                     };
                     console.log(recvFs)
-
-                } else if (fs.list.length > 0 && remote.list.length > 0) {
+                } else if (localSnapshotList.length > 0 && remoteSnapshotList.length > 0) {
                     // both lists are not empty, need to find common list
                     log.info('found snapshots on my filesystem %s', this.fs.local);
-                    log.info(fs.list.join(', '));
+                    log.info(localSnapshotList.join(', '));
 
                     log.info('finding a common list of snapshots');
                     // finding a common snapshots
-                    let commonList = fs.list.filter((mySnapshot) => {
-                        return remote.list.some((remoteSnapshot) => {
-                            if (mySnapshot === remoteSnapshot) return true;
+                    let commonSnapshotList = localSnapshotList.filter((localSnapshot) => {
+                        localSnapshotName = localSnapshot.split('@')[1];
+                        return remoteSnapshotList.some((remoteSnapshot) => {
+                            remoteSnapshotName = remoteSnapshot.split('@')[1];
+                            if (localSnapshotName === remoteSnapshotName) return true;
                             return false;
                         });
                     });
-                    log.info('common list: %s', commonList.join(', '));
+                    log.info('common snapshot list: %s', commonSnapshotList.join(', '));
 
-                    if (commonList.length === 0 && remote.list.length > 0) {
+                    if (commonSnapshotList.length === 0 && remoteSnapshotList.length > 0) {
                         // no common list found, but server has snapshots
                         log.info('server has no common snapshot');
-                        log.info('requesting server to end my connection');
-                        this.client.write(message(END, null));
-                    } else if (commonList.length === fs.list.length || fs.list[fs.list.length - 1] === remote.list[remote.list.length - 1]) {
+
+                    } else if (commonSnapshotList.length === localSnapshotList.length || localSnapshotList[localSnapshotList.length - 1] === remoteSnapshotList[remoteSnapshotList.length - 1]) {
                         // remote list has everything in my list or the last snapshot in my list matches the remote list's last snapshot
                         log.info('the server has all my snapshots, synchronization is complete');
-                        log.info('my snapshots: %s', fs.list.join(', '));
-                        log.info('server snapshots: %s', remote.list.join(', '));
-                        log.info('requesting server to end connection');
-                        this.client.write(message(END, null));
-                    } else if (commonList.length > 0 && commonList[commonList.length - 1] === remote.list[remote.list.length - 1]) {
+                        log.info('my snapshots: %s', localSnapshotList.join(', '));
+                        log.info('server snapshots: %s', remoteSnapshotList.join(', '));
+                    } else if (commonSnapshotList.length > 0 && commonSnapshotList[commonSnapshotList.length - 1] === remoteSnapshotList[remoteSnapshotList.length - 1]) {
                         // incremental send is needed
                         log.info('server needs an incremental send')
-                        log.info('server will be receiving a snapshot [ from: %s | to: %s ]', commonList[commonList.length - 1], fs.list[fs.list.indexOf(commonList[commonList.length - 1]) + 1]);
+                        log.info('server will be receiving a snapshot [ from: %s | to: %s ]', commonSnapshotList[commonSnapshotList.length - 1], localSnapshotList[localSnapshotList.indexOf(commonSnapshotList[commonSnapshotList.length - 1]) + 1]);
                         let recvFs = {
                             name: this.fs.remote,
                             incremental: true,
-                            snapFrom: commonList[commonList.length - 1],
-                            snapTo: fs.list[fs.list.indexOf(commonList[commonList.length - 1]) + 1]
+                            snapFrom: commonSnapshotList[commonSnapshotList.length - 1],
+                            snapTo: localSnapshotList[localSnapshotList.indexOf(commonSnapshotList[commonSnapshotList.length - 1]) + 1]
                         };
                         console.log(JSON.stringify(recvFs));
                     }
                 }
+                log.info('requesting server to end my connection');
+                this.client.write(message(END, null));
             });
         });
 

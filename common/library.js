@@ -25,17 +25,13 @@ function getSnapshotList(fs, cb) {
 
     proc.on('close', (code) => {
         if (out.length === 0) {
-            cb(Object.assign({}, fs, {
-                list: out
-            }));
+            cb(out);
         } else {
             out = out.join();
             out = out.split(/\n/);
             //console.log('snap list');
             //console.dir(out);
-            cb(Object.assign({}, fs, {
-                list: out
-            }));
+            cb(out);
         }
     });
 }

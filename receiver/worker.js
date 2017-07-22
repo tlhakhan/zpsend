@@ -42,16 +42,16 @@ class Worker extends EventEmitter {
         });
 
         this.on(GET_SNAPSHOT_LIST, (fs) => {
-            // data is expected to be an object.
-            log.info('received a get snapshot list message from client for %s', fs.name);
-            getSnapshotList(fs, (fs) => {
-                if (fs.list.length === 0) {
-                    log.info('client requested filesystem %s has no snapshots', fs.name);
+            // fs = filesystem name
+            log.info('received a get snapshot list message from client for %s', fs);
+            getSnapshotList(fs, (snapshotList) => {
+                if (snapshotList.length === 0) {
+                    log.info('client requested filesystem %s has no snapshots', fs);
                 } else {
-                    log.info('found snapshots on client requested filesystem %s', fs.name);
-                    log.info(fs.list.join(', '));
+                    log.info('found snapshots on client requested filesystem %s', fs);
+                    log.info(snapshotList.join(', '));
                 }
-                this.socket.write(message(SNAPSHOT_LIST, fs));
+                this.socket.write(message(SNAPSHOT_LIST, snapshotList));
             });
         });
 
