@@ -12,7 +12,7 @@ function getSnapshotList(fs, cb) {
     // cb([ list of snapshots ])
     // notes:  will return empty list dataset doesn't exist, or no snapshots are on the filesystem.
 
-    let proc = spawn('zfs', ['list', '-H', '-o', 'name', '-r', '-t', 'snapshot', '-d1', '-s', 'creation', fs.name])
+    let proc = spawn('zfs', ['list', '-H', '-o', 'name', '-r', '-t', 'snapshot', '-d1', '-s', 'creation', fs])
     let out = [];
 
     proc.stdout.setEncoding('utf8');
