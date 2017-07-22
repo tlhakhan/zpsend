@@ -9,8 +9,8 @@ let port = process.env.ZPORT || 6830;
 
 let filesystem = {
     local: process.env.LOCALFS || 'zones/test',
-    remote: process.env.REMOTEFS || 'zones/test'
-
+    remote: process.env.REMOTEFS || 'zones/test',
+    server: host
 }
 
 const client = net.createConnection({

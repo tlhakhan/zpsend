@@ -99,7 +99,7 @@ class Worker extends EventEmitter {
                         incremental: false,
                         snapInitial: [localSnapshotList[0]]
                     };
-                    console.log(`zfs send -v ${this.fs.local}@${recvFs.snapInitial} | ssh RECEIVER zfs recv -uF ${this.fs.remote}`)
+                    console.log(`zfs send -v ${this.fs.local}@${recvFs.snapInitial} | ssh ${this.fs.server} zfs recv -uF ${this.fs.remote}`)
                 } else if (localSnapshotList.length > 0 && remoteSnapshotList.length > 0) {
                     // both lists are not empty, need to find common list
                     log.info('found snapshots on my filesystem %s', this.fs.local);
@@ -138,7 +138,7 @@ class Worker extends EventEmitter {
                             snapFrom,
                             snapTo
                         };
-                        console.log(`zfs send -v -i ${this.fs.local}@${recvFs.snapFrom} ${this.fs.local}@${recvFs.snapTo} | ssh RECEIVER zfs recv -uF ${this.fs.remote}`)
+                        console.log(`zfs send -v -i ${this.fs.local}@${recvFs.snapFrom} ${this.fs.local}@${recvFs.snapTo} | ssh ${this.fs.server} zfs recv -uF ${this.fs.remote}`)
                     }
                 }
                 log.info('requesting server to end my connection');
