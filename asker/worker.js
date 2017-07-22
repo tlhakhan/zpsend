@@ -109,9 +109,9 @@ class Worker extends EventEmitter {
                     log.info('finding a common list of snapshots');
                     // finding a common snapshots
                     let commonSnapshotList = localSnapshotList.filter((localSnapshot) => {
-                        localSnapshotName = localSnapshot.split('@')[1];
+                        let localSnapshotName = localSnapshot.split('@')[1];
                         return remoteSnapshotList.some((remoteSnapshot) => {
-                            remoteSnapshotName = remoteSnapshot.split('@')[1];
+                            let remoteSnapshotName = remoteSnapshot.split('@')[1];
                             if (localSnapshotName === remoteSnapshotName) return true;
                             return false;
                         });
