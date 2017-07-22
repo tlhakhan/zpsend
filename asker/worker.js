@@ -23,7 +23,7 @@ class Worker extends EventEmitter {
         this.fs = filesystem;
 
         this.messageProcessor = (data) => {
-           log.debug('received data on socket');
+            log.debug('received data on socket');
             let message = msgpack.decode(data);
             if (message.type) {
                 log.debug('received valid message');
@@ -130,11 +130,15 @@ class Worker extends EventEmitter {
                         // incremental send is needed
                         log.info('server needs an incremental send')
                         log.info('server will be receiving a snapshot [ from: %s | to: %s ]', commonSnapshotList[commonSnapshotList.length - 1], localSnapshotList[localSnapshotList.indexOf(commonSnapshotList[commonSnapshotList.length - 1]) + 1]);
+
+                        let snapFrom = commonSnapshotList[commonSnapshotList.length - 1]
+                        let snapTo = localSnapshotList[localSnapshotList.indexOf(commonSnapshotList[commonSnapshotList.length - 1]) + 1]
+
                         let recvFs = {
                             name: this.fs.remote,
                             incremental: true,
-                            snapFrom: commonSnapshotList[commonSnapshotList.length - 1],
-                            snapTo: localSnapshotList[localSnapshotList.indexOf(commonSnapshotList[commonSnapshotList.length - 1]) + 1]
+                            snapFrom,
+                            snapTo
                         };
                         console.log(`zfs send -v -i ${recvFs.snapFrom} ${recvFs.snapTo} | ssh RECEIVER zfs recv -uF ${this.fs.remote}`)
                     }
