@@ -4,8 +4,10 @@ const bunyan = require('bunyan');
 
 const log = bunyan.createLogger({
     name: 'zpsend',
-    stream: process.stdout,
-    level: 'info'
+    streams: [{
+      path: '/var/log/zpsend.log'
+    }],
+    level: 'info',
 });
 
 module.exports = log;
