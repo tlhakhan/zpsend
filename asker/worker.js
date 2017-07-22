@@ -128,17 +128,18 @@ class Worker extends EventEmitter {
                         // incremental send is needed
                         log.info('server needs an incremental send')
                         log.info('server will be receiving a snapshot [ from: %s | to: %s ]', commonSnapshotList[commonSnapshotList.length - 1], localSnapshotList[localSnapshotList.indexOf(commonSnapshotList[commonSnapshotList.length - 1]) + 1]);
-
                         let snapFrom = commonSnapshotList[commonSnapshotList.length - 1]
-                        let snapTo = localSnapshotList[localSnapshotList.indexOf(commonSnapshotList[commonSnapshotList.length - 1]) + 1]
-
+                        // for use with -i
+                        //let snapTo = localSnapshotList[localSnapshotList.indexOf(commonSnapshotList[commonSnapshotList.length - 1]) + 1]
+                        // for use with -I
+                        let snapTo = localSnapshotList[localSnapshotList.length - 1]
                         let recvFs = {
                             name: this.fs.remote,
                             incremental: true,
                             snapFrom,
                             snapTo
                         };
-                        console.log(`zfs send -v -i ${this.fs.local}@${recvFs.snapFrom} ${this.fs.local}@${recvFs.snapTo} | ssh ${this.fs.server} zfs recv -uF ${this.fs.remote} &`)
+                        console.log(`zfs send -v -I ${this.fs.local}@${recvFs.snapFrom} ${this.fs.local}@${recvFs.snapTo} | ssh ${this.fs.server} zfs recv -uF ${this.fs.remote} &`)
                     }
                 }
                 log.info('requesting server to end my connection');
