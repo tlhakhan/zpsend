@@ -41,7 +41,7 @@ function getSnapshotList(fs, cb) {
 }
 
 function getZfsRecvStream(fs, cb) {
-    let proc = spawn('zfs', ['recv', '-F', fs.name]);
+    let proc = spawn('zfs', ['recv', '-uF', fs.name]);
     cb(proc);
 }
 
