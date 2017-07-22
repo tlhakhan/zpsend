@@ -89,8 +89,7 @@ class Worker extends EventEmitter {
                 if (localSnapshotList.length === 0) {
                     // my list is empty
                     log.error('no snapshots found on my filesystem %s', this.fs.local);
-                    log.info('requesting server to end my connection');
-                    this.client.write(message(END, null));
+                    console.log(`echo "no local snapshots for ${this.fs.local}"`)
                 } else if (localSnapshotList.length > 0 && remoteSnapshotList.length === 0) {
                     // needs initial seed snapshots
                     log.info('server needs an initial seed needed');
@@ -100,12 +99,11 @@ class Worker extends EventEmitter {
                         incremental: false,
                         snapInitial: [localSnapshotList[0]]
                     };
-                    console.log(recvFs)
+                    console.log(`zfs send -v ${recvFs.snapInitial} | ssh RECEIVER zfs recv -uF ${this.fs.remote}`)
                 } else if (localSnapshotList.length > 0 && remoteSnapshotList.length > 0) {
                     // both lists are not empty, need to find common list
                     log.info('found snapshots on my filesystem %s', this.fs.local);
                     log.info(localSnapshotList.join(', '));
-
                     log.info('finding a common list of snapshots');
                     // finding a common snapshots
                     let commonSnapshotList = localSnapshotList.filter((localSnapshot) => {
@@ -121,12 +119,13 @@ class Worker extends EventEmitter {
                     if (commonSnapshotList.length === 0 && remoteSnapshotList.length > 0) {
                         // no common list found, but server has snapshots
                         log.info('server has no common snapshot');
-
+                        console.log(`echo "no common snapshot found for ${this.fs.local} and ${this.fs.remote}"`)
                     } else if (commonSnapshotList.length === localSnapshotList.length || localSnapshotList[localSnapshotList.length - 1] === remoteSnapshotList[remoteSnapshotList.length - 1]) {
                         // remote list has everything in my list or the last snapshot in my list matches the remote list's last snapshot
                         log.info('the server has all my snapshots, synchronization is complete');
                         log.info('my snapshots: %s', localSnapshotList.join(', '));
                         log.info('server snapshots: %s', remoteSnapshotList.join(', '));
+                        console.log(`echo "snapshots are in sync for ${this.fs.local} and ${this.fs.remote}"`)
                     } else if (commonSnapshotList.length > 0 && commonSnapshotList[commonSnapshotList.length - 1] === remoteSnapshotList[remoteSnapshotList.length - 1]) {
                         // incremental send is needed
                         log.info('server needs an incremental send')
@@ -137,7 +136,7 @@ class Worker extends EventEmitter {
                             snapFrom: commonSnapshotList[commonSnapshotList.length - 1],
                             snapTo: localSnapshotList[localSnapshotList.indexOf(commonSnapshotList[commonSnapshotList.length - 1]) + 1]
                         };
-                        console.log(JSON.stringify(recvFs));
+                        console.log(`zfs send -v -i ${recvFs.snapFrom} ${recvFs.snapTo} | ssh RECEIVER zfs recv -uF ${this.fs.remote}`)
                     }
                 }
                 log.info('requesting server to end my connection');
@@ -147,7 +146,6 @@ class Worker extends EventEmitter {
 
         this.on(ERROR, (error) => {
             log.error('server returned error: %s', error);
-
             log.info('requesting server to end connection');
             this.client.write(message(END, null));
         });
