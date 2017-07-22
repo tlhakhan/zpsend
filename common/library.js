@@ -29,7 +29,7 @@ function getSnapshotList(fs, cb) {
         } else {
             out = out.join();
             out = out.split(/\n/);
-            out = out.forEach((item) => item.split('@')[1])
+            out = out.map(item => item.split(/@/)[1])
             cb(out);
         }
     });
