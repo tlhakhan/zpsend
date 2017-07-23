@@ -24,6 +24,7 @@ client <= end <= server
 module.exports = {
     'INIT': 'INIT',
     'LIST': 'LIST',
+    'FS_EXISTS': 'FS_EXISTS',
     'SNAPSHOT_LIST': 'SNAPSHOT_LIST',
     'GET_SNAPSHOT_LIST': 'GET_SNAPSHOT_LIST',
     'RECV_START': 'RECV_START',

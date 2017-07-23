@@ -5,6 +5,7 @@ const {
     INIT,
     GET_SNAPSHOT_LIST,
     SNAPSHOT_LIST,
+    FS_EXISTS,
     ERROR,
     END
 } = require('../common/messages');
@@ -79,7 +80,7 @@ class Worker extends EventEmitter {
                     // then proceed normally, ask for snapshot and send over missing snapshots
                     // send using -I
                     // log.info('asking %s to get it\'s snapshot list', server)
-                    this.client.write(message(GET_SNAPSHOT_LIST, `${this.remote.name}`));
+                    this.client.write(message(GET_SNAPSHOT_LIST, `${remote.name}`));
                 } else if (!exists && origin) {
 
                     // then have to create a clone over at the remote location

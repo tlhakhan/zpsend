@@ -6,6 +6,7 @@ const {
     INIT,
     SNAPSHOT_LIST,
     GET_SNAPSHOT_LIST,
+    FS_EXISTS,
     ERROR,
     END
 } = require('../common/messages');
