@@ -8,6 +8,41 @@ function message(type, data) {
     });
 }
 
+function fsExists(fs, cb) {
+    // zfs get -Hpo value name zones/var
+    spawn('zfs', ['get', '-H', '-p', '-o', 'name', 'name', fs])
+        .on('close', (code) => {
+            if (code === 0) {
+                cb(fs);
+            } else {
+                cb(false);
+            }
+        });
+}
+
+function getOrigin(fs, cb) {
+    // zfs get -Hpo value origin zones/var
+    let proc = spawn('zfs', ['get', '-H', '-p', '-o', 'value', 'origin', fs])
+    let out = [];
+
+    proc.stdout.setEncoding('utf8');
+    proc.stdout.on('data', (data) => {
+        data = data.trim();
+        if (data !== '') {
+            out.push(data);
+        }
+    });
+    
+    proc.on('close', (code) => {
+        out = out.join();
+        if (out !== '-') {
+            cb(out.trim())
+        } else {
+            cb(null);
+        }
+    });
+}
+
 function getSnapshotList(fs, cb) {
     // cb([ list of snapshots ])
     // notes:  will return empty list dataset doesn't exist, or no snapshots are on the filesystem.
@@ -33,28 +68,6 @@ function getSnapshotList(fs, cb) {
             cb(out);
         }
     });
-}
-
-function getZfsRecvStream(fs, cb) {
-    let proc = spawn('zfs', ['recv', '-uF', fs.name]);
-    cb(proc);
-}
-
-function getZfsSendStream(fs, cb) {
-    /*
-    fs = {
-      name: filesystem name
-      incremental: true|false
-      snapshot: [initial | from - to]
-    }
-    */
-    if (fs.incremental) {
-        let proc = spawn('zfs', ['send', '-i', fs.snapFrom, fs.snapTo]);
-        cb(proc);
-    } else {
-        let proc = spawn('zfs', ['send', fs.snapInitial]);
-        cb(proc);
-    }
 }
 
 module.exports = {

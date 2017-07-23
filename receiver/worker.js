@@ -12,6 +12,7 @@ const {
 
 const {
     message,
+    fsExists,
     getSnapshotList
 } = require('../common/library');
 
@@ -39,6 +40,13 @@ class Worker extends EventEmitter {
             log.info('received an init message from client');
             log.info('sending an init acknowledge to client');
             this.socket.write(message(INIT, null));
+        });
+
+        this.on(FS_EXISTS, (fs) => {
+            // fs = filesystem name
+            fsExists(fs, (exists) => {
+                this.socket.write(message(FS_EXISTS, exists))
+            });
         });
 
         this.on(GET_SNAPSHOT_LIST, (fs) => {
