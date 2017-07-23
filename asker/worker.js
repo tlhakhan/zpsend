@@ -127,87 +127,86 @@ class Worker extends EventEmitter {
         })
 
         this.on(SNAPSHOT_LIST, (remoteSnapshotList) => {
-                // data is expected to be an array.
-                let {
-                    remote,
-                    local
-                } = this.zpsend;
+            // data is expected to be an array.
+            let {
+                remote,
+                local
+            } = this.zpsend;
 
-                // get my snapshots
-                getSnapshotList(local.name, (localSnapshotList) => {
-                        if (localSnapshotList.length === 0) {
-                            // local filesystem doesn't have any snapshots
-                            log.info('local filesystem %s has no snapshots', local.name);
-                            // quit
-                            log.info('requesting server to end my connection');
-                            this.client.write(message(END, null));
+            // get my snapshots
+            getSnapshotList(local.name, (localSnapshotList) => {
+                if (localSnapshotList.length === 0) {
+                    // local filesystem doesn't have any snapshots
+                    log.info('local filesystem %s has no snapshots', local.name);
+                    // quit
+                    log.info('requesting server to end my connection');
+                    this.client.write(message(END, null));
 
-                        } else if (remoteSnapshotList.length === 0 && localSnapshotList > 0) {
-                            // initial filesystem seed is needed
-                            log.info('server has no snapshots on %s filesystem', remote.name);
-                            // remote server does have the filesystem, but no snapshots.
-                        } else if (localSnapshotList.length > 0 && remoteSnapshotList.length > 0) {
-                            // find common snapshots
-                            log.info('found snapshots on my filesystem %s', local.name);
-                            log.info(localSnapshotList.join(', '));
-                            log.info('finding a common list of snapshots');
-                            // finding a common snapshots
+                } else if (remoteSnapshotList.length === 0 && localSnapshotList > 0) {
+                    // initial filesystem seed is needed
+                    log.info('server has no snapshots on %s filesystem', remote.name);
+                    // remote server does have the filesystem, but no snapshots.
+                } else if (localSnapshotList.length > 0 && remoteSnapshotList.length > 0) {
+                    // find common snapshots
+                    log.info('found snapshots on my filesystem %s', local.name);
+                    log.info(localSnapshotList.join(', '));
+                    log.info('finding a common list of snapshots');
+                    // finding a common snapshots
 
-                            let commonSnapshotList = localSnapshotList.filter((localSnapshot) => {
-                                return remoteSnapshotList.some((remoteSnapshot) => {
-                                    if (localSnapshot === remoteSnapshot) return true;
-                                    return false;
-                                });
-                            });
-                            log.info('common snapshot list: %s', commonSnapshotList.join(', '));
+                    let commonSnapshotList = localSnapshotList.filter((localSnapshot) => {
+                        return remoteSnapshotList.some((remoteSnapshot) => {
+                            if (localSnapshot === remoteSnapshot) return true;
+                            return false;
+                        });
+                    });
+                    log.info('common snapshot list: %s', commonSnapshotList.join(', '));
 
-                            if (commonSnapshotList.length === 0 && remoteSnapshotList.length > 0) {
-                                // no common list found, but server has snapshots
-                                log.info('server has no common snapshot');
-                                console.log(`echo "Error: no common snapshot found for ${local.name} and ${remote.name}"`)
-                                    //quit
-                                log.info('requesting server to end my connection');
-                                this.client.write(message(END, null));
-                            } else if (commonSnapshotList.length === localSnapshotList.length || localSnapshotList[localSnapshotList.length - 1] === remoteSnapshotList[remoteSnapshotList.length - 1]) {
-                                // remote list has everything in my list or the last snapshot in my list matches the remote list's last snapshot
-                                log.info('the server has all my snapshots, synchronization is complete');
-                                log.info('my snapshots: %s', localSnapshotList.join(', '));
-                                log.info('server snapshots: %s', remoteSnapshotList.join(', '));
-                                console.log(`echo "Info: snapshots are in sync for ${local.name} and ${remote.name}"`)
-                                    //quit
-                                log.info('requesting server to end my connection');
-                                this.client.write(message(END, null));
-                            } else {
-                                // incremental send is needed
-                                log.info('server needs an incremental send')
-                                log.info('server will be receiving a snapshot [ from: %s | to: %s ]', commonSnapshotList[commonSnapshotList.length - 1], localSnapshotList[localSnapshotList.indexOf(commonSnapshotList[commonSnapshotList.length - 1]) + 1]);
-                                let snapFrom = commonSnapshotList[commonSnapshotList.length - 1]
-                                    // for use with -i
-                                    //let snapTo = localSnapshotList[localSnapshotList.indexOf(commonSnapshotList[commonSnapshotList.length - 1]) + 1]
-                                    // for use with -I
-                                let snapTo = localSnapshotList[localSnapshotList.length - 1]
-                                let recvFs = {
-                                    name: remote.name,
-                                    incremental: true,
-                                    snapFrom,
-                                    snapTo
-                                };
-                                console.log(`zfs send -v -I ${local.name}@${recvFs.snapFrom} ${local.name}@${recvFs.snapTo} | ssh ${this.fs.server} zfs recv -uF ${remote.name} &`)
-                                    //quit
-                                log.info('requesting server to end my connection');
-                                this.client.write(message(END, null));
-                            }
-                        }
+                    if (commonSnapshotList.length === 0 && remoteSnapshotList.length > 0) {
+                        // no common list found, but server has snapshots
+                        log.info('server has no common snapshot');
+                        console.log(`echo "Error: no common snapshot found for ${local.name} and ${remote.name}"`)
+                            //quit
+                        log.info('requesting server to end my connection');
+                        this.client.write(message(END, null));
+                    } else if (commonSnapshotList.length === localSnapshotList.length || localSnapshotList[localSnapshotList.length - 1] === remoteSnapshotList[remoteSnapshotList.length - 1]) {
+                        // remote list has everything in my list or the last snapshot in my list matches the remote list's last snapshot
+                        log.info('the server has all my snapshots, synchronization is complete');
+                        log.info('my snapshots: %s', localSnapshotList.join(', '));
+                        log.info('server snapshots: %s', remoteSnapshotList.join(', '));
+                        console.log(`echo "Info: snapshots are in sync for ${local.name} and ${remote.name}"`)
+                            //quit
+                        log.info('requesting server to end my connection');
+                        this.client.write(message(END, null));
+                    } else {
+                        // incremental send is needed
+                        log.info('server needs an incremental send')
+                        log.info('server will be receiving a snapshot [ from: %s | to: %s ]', commonSnapshotList[commonSnapshotList.length - 1], localSnapshotList[localSnapshotList.indexOf(commonSnapshotList[commonSnapshotList.length - 1]) + 1]);
+                        let snapFrom = commonSnapshotList[commonSnapshotList.length - 1]
+                            // for use with -i
+                            //let snapTo = localSnapshotList[localSnapshotList.indexOf(commonSnapshotList[commonSnapshotList.length - 1]) + 1]
+                            // for use with -I
+                        let snapTo = localSnapshotList[localSnapshotList.length - 1]
+                        let recvFs = {
+                            name: remote.name,
+                            incremental: true,
+                            snapFrom,
+                            snapTo
+                        };
+                        console.log(`zfs send -v -I ${local.name}@${recvFs.snapFrom} ${local.name}@${recvFs.snapTo} | ssh ${this.fs.server} zfs recv -uF ${remote.name} &`)
+                            //quit
+                        log.info('requesting server to end my connection');
+                        this.client.write(message(END, null));
                     }
-                });
+                }
+            });
         });
 
-    this.on(ERROR, (error) => {
-        log.error('server returned error: %s', error);
-        log.info('requesting server to end connection');
-        this.client.write(message(END, null));
-    });
-}
+        this.on(ERROR, (error) => {
+            log.error('server returned error: %s', error);
+            log.info('requesting server to end connection');
+            this.client.write(message(END, null));
+        });
+    }
 }
 
 
