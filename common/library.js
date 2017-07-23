@@ -32,7 +32,7 @@ function getOrigin(fs, cb) {
             out.push(data);
         }
     });
-    
+
     proc.on('close', (code) => {
         out = out.join();
         if (out !== '-') {
@@ -73,6 +73,6 @@ function getSnapshotList(fs, cb) {
 module.exports = {
     message,
     getSnapshotList,
-    getZfsRecvStream,
-    getZfsSendStream
+    getOrigin,
+    fsExists
 }
