@@ -55,8 +55,8 @@ class Worker extends EventEmitter {
                     // filesystem does exist locally
                     // ask if filesystem exists remotely
                     log.info('local filesystem %s does exist', `${local.name}`)
-                    log.info('checking existence of filesystem %s on %s', `${remote.name}`, server)
-                    this.client.write(message(FS_EXISTS, `${remote.name}`));
+                    log.info('checking existence of filesystem %s on %s', remote.name, server)
+                    this.client.write(message(FS_EXISTS, remote.name));
                 } else {
                     // filesystem doesn't exist
                     log.info('local filesystem does not exist', `${local.name}`)
@@ -74,13 +74,13 @@ class Worker extends EventEmitter {
             } = this.zpsend;
             // remote server gave a response
 
-            getOrigin(`${local.name}`, (origin) => {
+            getOrigin(local.name, (origin) => {
                 if (exists) {
                     //log.info('%s does have the local filesystem %s', server, `${local.name}`)
-                    // then proceed normally, ask for snapshot and send over missing snapshots
+                    //  proceed normally, ask for snapshot and send over missing snapshots
                     // send using -I
-                    // log.info('asking %s to get it\'s snapshot list', server)
-                    this.client.write(message(GET_SNAPSHOT_LIST, `${remote.name}`));
+                    log.info('asking %s to get the snapshot list of %s', server, local.name)
+                    this.client.write(message(GET_SNAPSHOT_LIST, remote.name));
                 } else if (!exists && origin) {
 
                     // then have to create a clone over at the remote location
@@ -101,6 +101,10 @@ class Worker extends EventEmitter {
                                 snapInitial: [localSnapshotList[0]]
                             };
                             console.log(`zfs send -v -RI ${origin} | ssh ${server} zfs recv -uF ${remote.name} &`)
+
+                            // quit
+                            log.info('requesting server to end my connection');
+                            this.client.write(message(END, null));
                         }
                     });
                 } else if (!exists && !origin) {
@@ -121,8 +125,20 @@ class Worker extends EventEmitter {
                                 snapInitial: [localSnapshotList[0]]
                             };
                             console.log(`zfs send -v ${local.name}@${recvFs.snapInitial} | ssh ${server} zfs recv -uF ${remote.name} &`)
+
+
+                            // quit
+                            log.info('requesting server to end my connection');
+                            this.client.write(message(END, null));
                         }
                     });
+                } else {
+                  log.error('uncaught case in FS_EXISTS');
+
+                  // quit
+                  log.info('requesting server to end my connection');
+                  this.client.write(message(END, null));
+
                 }
             })
         })
@@ -198,6 +214,12 @@ class Worker extends EventEmitter {
                         log.info('requesting server to end my connection');
                         this.client.write(message(END, null));
                     }
+                } else {
+                  log.error('uncaught case in SNAPSHOT_LIST');
+
+                  // quit
+                  log.info('requesting server to end my connection');
+                  this.client.write(message(END, null));
                 }
             });
         });
