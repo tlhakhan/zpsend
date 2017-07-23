@@ -15,7 +15,7 @@ let zpsend = {
     remote: {
         prefix: process.env.REMOTE_PREFIX || 'zones/backup',
         get name() {
-            return zpsend.local.name.replace(/`^${zpsend.local.prefix}`/, zpsend.remote.prefix);
+            return zpsend.local.name.replace(zpsend.local.prefix, this.prefix);
         }
     },
     server: host
