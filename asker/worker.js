@@ -95,12 +95,12 @@ class Worker extends EventEmitter {
                             this.client.write(message(END, null));
                         } else {
                             log.info('server needs an initial seed needed');
-                            log.info('server will be receiving an initial snapshot [ %s ]', localSnapshotList[0]);
+                            log.info('server will be receiving a clone with origin from %s to a last clone snapshot of %s into %s', origin, localSnapshotList[localSnapshotList.length -1], remote.name);
                             let recvFs = {
                                 name: remote.name,
-                                snapInitial: [localSnapshotList[0]]
+                                snapLast: localSnapshotList[localSnapshotList.length -1]
                             };
-                            console.log(`zfs send -v -RI ${origin} | ssh ${server} zfs recv -uF ${remote.name} &`)
+                            console.log(`zfs send -v -RI ${origin} ${recvFs.snapLast} | ssh ${server} zfs recv -uF ${remote.name} &`)
 
                             // quit
                             log.info('requesting server to end my connection');
