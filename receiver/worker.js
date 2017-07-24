@@ -38,14 +38,14 @@ class Worker extends EventEmitter {
 
         this.on(INIT, (data) => {
             // data is expected to be null.
-            log.info('received an init message from client');
-            log.info('sending an init acknowledge to client');
+            log.debug('received an init message from client');
+            log.debug('sending an init acknowledge to client');
             this.socket.write(message(INIT, null));
         });
 
         this.on(FS_EXISTS, (fs) => {
             // fs = filesystem name
-            log.info('client requested existence of %s', fs);
+            log.info('does %s exist?', fs);
             fsExists(fs, (exists) => {
                 if(exists) {
                   log.info('%s does exist', fs);
@@ -61,9 +61,9 @@ class Worker extends EventEmitter {
             log.info('received a get snapshot list message from client for %s', fs);
             getSnapshotList(fs, (snapshotList) => {
                 if (snapshotList.length === 0) {
-                    log.info('client requested filesystem %s has no snapshots', fs);
+                    log.info('filesystem %s has no snapshots', fs);
                 } else {
-                    log.info('found snapshots on client requested filesystem %s', fs);
+                    log.info('found snapshots on filesystem %s', fs);
                     log.info(snapshotList.join(', '));
                 }
                 this.socket.write(message(SNAPSHOT_LIST, snapshotList));
@@ -71,7 +71,7 @@ class Worker extends EventEmitter {
         });
 
         this.on(END, () => {
-            log.info('client politely asked to end connection');
+            log.debug('client politely asked to end connection');
             this.socket.end();
         });
     }

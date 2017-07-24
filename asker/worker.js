@@ -46,21 +46,21 @@ class Worker extends EventEmitter {
                 local,
                 server
             } = this.zpsend;
-            log.info('received an init acknowledge from %s', server);
+            log.debug('received an init acknowledge from %s', server);
 
-            log.info('checking existence of local filesystem %s', `${local.name}`);
+            log.info('does filesystem %s exist locally?', `${local.name}`);
 
             fsExists(`${local.name}`, (exists) => {
                 if (exists) {
                     // filesystem does exist locally
                     // ask if filesystem exists remotely
                     log.info('local filesystem %s does exist', `${local.name}`)
-                    log.info('checking existence of filesystem %s on %s', remote.name, server)
+                    log.info('does filesystem %s exist on %s', remote.name, server)
                     this.client.write(message(FS_EXISTS, remote.name));
                 } else {
                     // filesystem doesn't exist
-                    log.info('local filesystem does not exist', `${local.name}`)
-                    log.info('requesting %s to end my connection', server);
+                    log.error('local filesystem %s does not exist', `${local.name}`)
+                    log.debug('requesting %s to end my connection', server);
                     this.client.write(message(END, null));
                 }
             });
@@ -89,21 +89,20 @@ class Worker extends EventEmitter {
                         // needs initial seed snapshots
                         if (localSnapshotList.length === 0) {
                             // local fs doesn't have any snapshots, quit
-                            log.info('local filesystem %s has no snapshots', local.name);
+                            log.error('local filesystem %s has no snapshots', local.name);
                             // quit
-                            log.info('requesting server to end my connection');
+                            log.debug('requesting server to end my connection');
                             this.client.write(message(END, null));
                         } else {
-                            log.info('server needs an initial seed needed');
-                            log.info('server will be receiving a clone with origin from %s to a last clone snapshot of %s into %s', origin, localSnapshotList[localSnapshotList.length -1], remote.name);
                             let recvFs = {
                                 name: remote.name,
-                                snapLast: localSnapshotList[localSnapshotList.length -1]
+                                snapLast: localSnapshotList[localSnapshotList.length - 1]
                             };
+                            log.info(`server will be receiving an recursive incremental from origin snapshot ${origin} to ${local.name}@${recvFs.snapLast} into ${remote.name}`);
                             console.log(`"zfs send -v -RI ${origin} ${local.name}@${recvFs.snapLast} | ssh ${server} zfs recv -uF ${remote.name}"`)
 
                             // quit
-                            log.info('requesting server to end my connection');
+                            log.debug('requesting server to end my connection');
                             this.client.write(message(END, null));
                         }
                     });
@@ -115,28 +114,26 @@ class Worker extends EventEmitter {
                             // local fs doesn't have any snapshots, quit
                             log.error('local filesystem %s has no snapshots', local.name);
                             // quit
-                            log.info('requesting server to end my connection');
+                            log.debug('requesting server to end my connection');
                             this.client.write(message(END, null));
                         } else {
-                            log.info('server needs an initial seed');
-                            log.info('server will be receiving an initial snapshot %s', localSnapshotList[0]);
                             let recvFs = {
                                 name: remote.name,
                                 snapInitial: [localSnapshotList[0]]
                             };
+                            log.info(`server will be receiving an initial snapshot ${local.name}@${recvFs.snapInitial} into ${remote.name}`);
                             console.log(`"zfs send -v ${local.name}@${recvFs.snapInitial} | ssh ${server} zfs recv -uF ${remote.name}"`)
-
-                            // quit
-                            log.info('requesting server to end my connection');
+                                // quit
+                            log.debug('requesting server to end my connection');
                             this.client.write(message(END, null));
                         }
                     });
                 } else {
-                  log.error('uncaught case in FS_EXISTS');
+                    log.error('uncaught case in FS_EXISTS');
 
-                  // quit
-                  log.info('requesting server to end my connection');
-                  this.client.write(message(END, null));
+                    // quit
+                    log.debug('requesting server to end my connection');
+                    this.client.write(message(END, null));
 
                 }
             })
@@ -156,23 +153,23 @@ class Worker extends EventEmitter {
                     // local filesystem doesn't have any snapshots
                     log.error('local filesystem %s has no snapshots', local.name);
                     // quit
-                    log.info('requesting server to end my connection');
+                    log.debug('requesting server to end my connection');
                     this.client.write(message(END, null));
 
                 } else if (remoteSnapshotList.length === 0 && localSnapshotList > 0) {
                     // initial filesystem seed is needed
-                    log.info('server does have filesystem, but has no snapshots on %s', remote.name);
-                    // remote server does have the filesystem, but no snapshots.
+                    log.info('server does have filesystem %s, but has no snapshots', local.name);
 
-                    log.info('server needs an initial seed');
-                    log.info('server will be receiving an initial snapshot %s', localSnapshotList[0]);
+                    // remote server does have the filesystem, but no snapshots.
                     let recvFs = {
                         name: remote.name,
                         snapInitial: [localSnapshotList[0]]
                     };
+
+                    log.info(`server will be receiving an initial snapshot ${local.name}@${recvFs.snapInitial} into ${remote.name}`);
                     console.log(`"zfs send -v ${local.name}@${recvFs.snapInitial} | ssh ${server} zfs recv -uF ${remote.name}"`)
 
-                    log.info('requesting server to end my connection');
+                    log.debug('requesting server to end my connection');
                     this.client.write(message(END, null));
                 } else if (localSnapshotList.length > 0 && remoteSnapshotList.length > 0) {
                     // find common snapshots
@@ -188,20 +185,18 @@ class Worker extends EventEmitter {
                     if (commonSnapshotList.length === 0 && remoteSnapshotList.length > 0) {
                         // no common list found, but server has snapshots
                         log.error('server has no common snapshot');
-                            //quit
-                        log.info('requesting server to end my connection');
+                        //quit
+                        log.debug('requesting server to end my connection');
                         this.client.write(message(END, null));
                     } else if (commonSnapshotList.length === localSnapshotList.length || localSnapshotList[localSnapshotList.length - 1] === remoteSnapshotList[remoteSnapshotList.length - 1]) {
                         // remote list has everything in my list or the last snapshot in my list matches the remote list's last snapshot
-                        log.info('the server has all my snapshots, SYNC is COMPLETE');
+                        log.info('the server has all my snapshots, ~~[[ sync is complete ]]~~');
                         // log.info('my snapshots: %s', localSnapshotList.join(', '));
                         // log.info('server snapshots: %s', remoteSnapshotList.join(', '));
-                        log.info('requesting server to end my connection');
+                        log.debug('requesting server to end my connection');
                         this.client.write(message(END, null));
                     } else {
                         // incremental send is needed
-                        log.info('server needs an incremental send')
-                        log.info('server will be receiving a snapshot from: %s to: %s ', commonSnapshotList[commonSnapshotList.length - 1], localSnapshotList[localSnapshotList.indexOf(commonSnapshotList[commonSnapshotList.length - 1]) + 1]);
                         let snapFrom = commonSnapshotList[commonSnapshotList.length - 1]
                             // for use with -i
                             //let snapTo = localSnapshotList[localSnapshotList.indexOf(commonSnapshotList[commonSnapshotList.length - 1]) + 1]
@@ -209,34 +204,32 @@ class Worker extends EventEmitter {
                         let snapTo = localSnapshotList[localSnapshotList.length - 1]
                         let recvFs = {
                             name: remote.name,
-                            incremental: true,
                             snapFrom,
                             snapTo
                         };
+                        log.info(`server will be receiving a snapshot from: ${local.name}@${recvFs.snapFrom} to: ${local.name}@${recvFs.snapTo}`);
                         console.log(`"zfs send -v -I ${local.name}@${recvFs.snapFrom} ${local.name}@${recvFs.snapTo} | ssh ${server} zfs recv -uF ${remote.name}"`)
                             //quit
-                        log.info('requesting server to end my connection');
+                        log.debug('requesting server to end my connection');
                         this.client.write(message(END, null));
                     }
                 } else {
-                  log.error('uncaught case in SNAPSHOT_LIST');
+                    log.error('uncaught case in SNAPSHOT_LIST');
 
-                  // quit
-                  log.info('requesting server to end my connection');
-                  this.client.write(message(END, null));
+                    // quit
+                    log.debug('requesting server to end my connection');
+                    this.client.write(message(END, null));
                 }
             });
         });
 
         this.on(ERROR, (error) => {
             log.error('server returned error: %s', error);
-            log.info('requesting server to end connection');
+            log.debug('requesting server to end my connection');
             this.client.write(message(END, null));
         });
     }
 }
-
-
 
 function connection(client, filesystem) {
     log.debug('connected to server');
