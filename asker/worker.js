@@ -100,7 +100,7 @@ class Worker extends EventEmitter {
                                 name: remote.name,
                                 snapLast: localSnapshotList[localSnapshotList.length -1]
                             };
-                            console.log(`zfs send -v -RI ${origin} ${local.name}@${recvFs.snapLast} | ssh ${server} zfs recv -uF ${remote.name} &`)
+                            console.log(`"zfs send -v -RI ${origin} ${local.name}@${recvFs.snapLast} | ssh ${server} zfs recv -uF ${remote.name} "`)
 
                             // quit
                             log.info('requesting server to end my connection');
@@ -124,7 +124,7 @@ class Worker extends EventEmitter {
                                 name: remote.name,
                                 snapInitial: [localSnapshotList[0]]
                             };
-                            console.log(`zfs send -v ${local.name}@${recvFs.snapInitial} | ssh ${server} zfs recv -uF ${remote.name} &`)
+                            console.log(`"zfs send -v ${local.name}@${recvFs.snapInitial} | ssh ${server} zfs recv -uF ${remote.name} "`)
 
 
                             // quit
@@ -209,7 +209,7 @@ class Worker extends EventEmitter {
                             snapFrom,
                             snapTo
                         };
-                        console.log(`zfs send -v -I ${local.name}@${recvFs.snapFrom} ${local.name}@${recvFs.snapTo} | ssh ${server} zfs recv -uF ${remote.name} &`)
+                        console.log(`"zfs send -v -I ${local.name}@${recvFs.snapFrom} ${local.name}@${recvFs.snapTo} | ssh ${server} zfs recv -uF ${remote.name} "`)
                             //quit
                         log.info('requesting server to end my connection');
                         this.client.write(message(END, null));
