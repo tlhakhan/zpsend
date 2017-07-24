@@ -126,7 +126,6 @@ class Worker extends EventEmitter {
                             };
                             console.log(`"zfs send -v ${local.name}@${recvFs.snapInitial} | ssh ${server} zfs recv -uF ${remote.name} "`)
 
-
                             // quit
                             log.info('requesting server to end my connection');
                             this.client.write(message(END, null));
@@ -147,7 +146,8 @@ class Worker extends EventEmitter {
             // data is expected to be an array.
             let {
                 remote,
-                local
+                local,
+                server
             } = this.zpsend;
 
             // get my snapshots
@@ -181,7 +181,6 @@ class Worker extends EventEmitter {
                     if (commonSnapshotList.length === 0 && remoteSnapshotList.length > 0) {
                         // no common list found, but server has snapshots
                         log.info('server has no common snapshot');
-                        console.log(`echo "Error: no common snapshot found for ${local.name} and ${remote.name}"`)
                             //quit
                         log.info('requesting server to end my connection');
                         this.client.write(message(END, null));
@@ -190,8 +189,6 @@ class Worker extends EventEmitter {
                         log.info('the server has all my snapshots, synchronization is complete');
                         log.info('my snapshots: %s', localSnapshotList.join(', '));
                         log.info('server snapshots: %s', remoteSnapshotList.join(', '));
-                        console.log(`echo "Info: snapshots are in sync for ${local.name} and ${remote.name}"`)
-                            //quit
                         log.info('requesting server to end my connection');
                         this.client.write(message(END, null));
                     } else {
