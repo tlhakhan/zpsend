@@ -45,7 +45,13 @@ class Worker extends EventEmitter {
 
         this.on(FS_EXISTS, (fs) => {
             // fs = filesystem name
+            log.info('client requested existence of %s', fs);
             fsExists(fs, (exists) => {
+                if(exists) {
+                  log.info('%s does exist', fs);
+                } else {
+                  log.info('%s does not exist', fs);
+                }
                 this.socket.write(message(FS_EXISTS, exists))
             });
         });
