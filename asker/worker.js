@@ -76,13 +76,15 @@ class Worker extends EventEmitter {
 
             getOrigin(local.name, (origin) => {
                 if (exists) {
+                    log.info('local filesystem %s does exist on %s', local.name, server);
+
                     //log.info('%s does have the local filesystem %s', server, `${local.name}`)
                     //  proceed normally, ask for snapshot and send over missing snapshots
                     // send using -I
                     log.info('asking %s to get the snapshot list of %s', server, local.name)
                     this.client.write(message(GET_SNAPSHOT_LIST, remote.name));
                 } else if (!exists && origin) {
-
+                  log.info('local filesystem %s does not exist on %s', local.name, server);
                     // then have to create a clone over at the remote location
                     // send using -RI method
                     getSnapshotList(local.name, (localSnapshotList) => {
@@ -107,6 +109,8 @@ class Worker extends EventEmitter {
                         }
                     });
                 } else if (!exists && !origin) {
+                  log.info('local filesystem %s does not exist on %s', local.name, server);
+
                     // initial filesystem seed is needed
                     getSnapshotList(`${local.name}`, (localSnapshotList) => {
                         // needs initial seed snapshots
