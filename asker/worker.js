@@ -219,7 +219,9 @@ class Worker extends EventEmitter {
                     }
                 } else {
                     log.error('uncaught case in SNAPSHOT_LIST');
+                    log.error('localSnapshotList length: %s', localSnapshotList.length);
                     log.error('localSnapshotList: %s', localSnapshotList.join(',') );
+                    log.error('remoteSnapshotList length: %s', remoteSnapshotList.length);
                     log.error('remoteSnapshotList: %s', remoteSnapshotList.join(','));
                     // quit
                     log.debug('requesting server to end my connection');
