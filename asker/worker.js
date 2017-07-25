@@ -14,8 +14,7 @@ const {
     message,
     fsExists,
     getOrigin,
-    getSnapshotList,
-    getFilesystemProperties
+    getSnapshotList
 } = require('../common/library');
 
 const log = require('../common/logger');
