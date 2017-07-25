@@ -178,7 +178,7 @@ class Worker extends EventEmitter {
                 } else if (localSnapshotList.length > 0 && remoteSnapshotList.length > 0) {
                     // find common snapshots
                     log.info('found snapshots on my filesystem %s: %s', local.name, localSnapshotList.join(','));
-
+                    // not observed here, but the localSnapshotList and remoteSnapshotList are ordered by creation time in the common/library.getSnapshotList 
                     let commonSnapshotList = localSnapshotList.filter((localSnapshot) => {
                         return remoteSnapshotList.some((remoteSnapshot) => {
                             if (localSnapshot === remoteSnapshot) return true;
