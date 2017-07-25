@@ -153,14 +153,14 @@ class Worker extends EventEmitter {
 
             // get my snapshots
             getSnapshotList(local.name, (localSnapshotList) => {
-                if (localSnapshotList.length === 0) {
+                if (localSnapshotList.length == 0) {
                     // local filesystem doesn't have any snapshots
                     log.error('local filesystem %s has no snapshots', local.name);
                     // quit
                     log.debug('requesting server to end my connection');
                     this.client.write(message(END, null));
 
-                } else if (remoteSnapshotList.length === 0 && localSnapshotList > 0) {
+                } else if (remoteSnapshotList.length == 0 && localSnapshotList > 0) {
                     // initial filesystem seed is needed
                     log.info('server does have filesystem %s, but has no snapshots', local.name);
 
@@ -186,7 +186,7 @@ class Worker extends EventEmitter {
                         });
                     });
 
-                    if (commonSnapshotList.length === 0 && remoteSnapshotList.length > 0) {
+                    if (commonSnapshotList.length == 0 && remoteSnapshotList.length > 0) {
                         // no common list found, but server has snapshots
                         log.error('server has no common snapshot');
                         //quit

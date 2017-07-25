@@ -60,7 +60,7 @@ class Worker extends EventEmitter {
             // fs = filesystem name
             log.info('received a get snapshot list message from client for %s', fs);
             getSnapshotList(fs, (snapshotList) => {
-                if (snapshotList.length === 0) {
+                if (snapshotList.length == 0) {
                     log.info('filesystem %s has no snapshots', fs);
                 } else {
                     log.info('found snapshots on filesystem %s', fs);
