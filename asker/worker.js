@@ -40,6 +40,7 @@ class Worker extends EventEmitter {
 
         this.on(INIT, (data) => {
             // data is expected to be null.
+            //
             let {
                 remote,
                 local,
