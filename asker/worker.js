@@ -160,7 +160,7 @@ class Worker extends EventEmitter {
                     log.debug('requesting server to end my connection');
                     this.client.write(message(END, null));
 
-                } else if (remoteSnapshotList.length == 0 && localSnapshotList > 0) {
+                } else if (remoteSnapshotList.length == 0 && localSnapshotList.length > 0) {
                     // initial filesystem seed is needed
                     log.info('server does have filesystem %s, but has no snapshots', local.name);
 
@@ -221,6 +221,7 @@ class Worker extends EventEmitter {
                     log.error('uncaught case in SNAPSHOT_LIST');
                     log.error('localSnapshotList length: %s', localSnapshotList.length);
                     log.error('localSnapshotList: %s', localSnapshotList.join(',') );
+                    //
                     log.error('remoteSnapshotList length: %s', remoteSnapshotList.length);
                     log.error('remoteSnapshotList: %s', remoteSnapshotList.join(','));
                     // quit
