@@ -47,18 +47,18 @@ class Worker extends EventEmitter {
             } = this.zpsend;
             log.debug('received an init acknowledge from %s', server);
 
-            log.info('does filesystem %s exist locally?', `${local.name}`);
+            log.info('does filesystem %s exist locally?', local.name);
 
-            fsExists(`${local.name}`, (exists) => {
+            fsExists(local.name, (exists) => {
                 if (exists) {
                     // filesystem does exist locally
                     // ask if filesystem exists remotely
-                    log.info('local filesystem %s does exist', `${local.name}`)
+                    log.info('local filesystem %s does exist', local.name)
                     log.info('does filesystem %s exist on %s', remote.name, server)
                     this.client.write(message(FS_EXISTS, remote.name));
                 } else {
                     // filesystem doesn't exist
-                    log.error('local filesystem %s does not exist', `${local.name}`)
+                    log.error('local filesystem %s does not exist', local.name)
                     log.debug('requesting %s to end my connection', server);
                     this.client.write(message(END, null));
                 }
@@ -77,7 +77,7 @@ class Worker extends EventEmitter {
                 if (exists) {
                     log.info('local filesystem %s does exist on %s', local.name, server);
 
-                    //log.info('%s does have the local filesystem %s', server, `${local.name}`)
+                    //log.info('%s does have the local filesystem %s', server, local.name)
                     //  proceed normally, ask for snapshot and send over missing snapshots
                     // send using -I
                     log.info('asking %s to get the snapshot list of %s', server, local.name)
@@ -111,7 +111,7 @@ class Worker extends EventEmitter {
                   log.info('local filesystem %s does not exist on %s', local.name, server);
 
                     // initial filesystem seed is needed
-                    getSnapshotList(`${local.name}`, (localSnapshotList) => {
+                    getSnapshotList(local.name, (localSnapshotList) => {
                         // needs initial seed snapshots
                         if (localSnapshotList.length === 0) {
                             // local fs doesn't have any snapshots, quit
@@ -234,11 +234,11 @@ class Worker extends EventEmitter {
     }
 }
 
-function connection(client, filesystem) {
+function connection(client, zpsend) {
     log.debug('connected to server');
 
     log.debug('creating a worker object');
-    const myWorker = new Worker(client, filesystem);
+    const myWorker = new Worker(client, zpsend);
 
     log.debug('sending init message to server');
     client.write(message(INIT, null));
