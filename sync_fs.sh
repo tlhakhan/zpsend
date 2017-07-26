@@ -45,4 +45,7 @@ else
   printf "The clonefs.sync.cmds has no commands to process.\n"
 fi
 
-rm
+rm ${BASEDIR}/rootfs.sync.cmds
+rm ${BASEDIR}/rootfs.list
+rm ${BASEDIR}/clonefs.sync.cmds
+rm ${BASEDIR}/clonefs.list
