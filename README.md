@@ -57,3 +57,14 @@ chmod +x sync_fs.sh
 ./sync_fs.sh smos-00-bk1 zp99/tank_99/Btenzin zp99/tank_99 backup/zp99/tank_99
 
 ```
+
+### Wish list
+- Find a nice zfs + transport mechanism
+  - torrent?
+  - http?
+  - latency sensitive?  zmotion?
+- Write in golang
+  - Plus:  small binary - compile once and distribute.
+  - Plus:  use ansible easily for deployment and service start up.
+  - Minus:  javascript's ES6 templating is so very useful and easy.
+  - delta:  javascript prototype development is very easy and fast, so is golang's, but need to first dive deeper into its pkg ecosystem.
