@@ -7,10 +7,12 @@
   - asker will continue to generate zfs commands for sync until all filesystems are in sync between asker and receiver.
 
 ### Helpers
-- `setup_receiver.sh` creates the receiver workspace
-- `setup_asker.sh` creates the asker workspace
+- `setup_receiver.sh`
+  - creates the receiver workspace
+- `setup_asker.sh`
+  - creates the asker workspace
 
-## Setting up the zpsend: receiver
+## Starting up the zpsend: receiver
 
 ```bash
 
@@ -23,7 +25,7 @@ cd workspace-receiver
 while true; ./run_zpsend.sh ; sleep 1; done
 ```
 
-## Setting up the zpsend: asker
+## Starting up the zpsend: asker
 
 ```bash
 
