@@ -1,8 +1,10 @@
 ## Modules
 - `zpsend: receiver`
-  - **functionality**:  receives zfs filesystem questions from the asker.
+  - receives zfs filesystem questions from the asker.
 - `zpsend: asker`
-  - **functionality**:  asks the receiver about which filesystem it has and its snapshots.  asker will generate a set of zfs commands so that the receiver can properly receive the filesystems and snapshots.  the asker will continue to generate zfs commands for sync until all filesystems are in sync between asker and receiver.
+  - asks the receiver about which filesystem it has and its snapshots.  
+  - asker will generate a set of zfs commands so that the receiver can properly receive the filesystems and snapshots.  
+  - asker will continue to generate zfs commands for sync until all filesystems are in sync between asker and receiver.
 
 ### Helpers
 - `setup_receiver.sh` creates the receiver workspace
