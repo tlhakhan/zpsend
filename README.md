@@ -12,7 +12,7 @@
 - `setup_asker.sh`
   - creates the asker workspace
 
-## Starting up the zpsend: receiver
+### Starting up the zpsend: receiver
 
 ```bash
 
@@ -25,7 +25,7 @@ cd workspace-receiver
 while true; ./run_zpsend.sh ; sleep 1; done
 ```
 
-## Starting up the zpsend: asker
+### Starting up the zpsend: asker
 
 ```bash
 
