@@ -42,6 +42,12 @@ chmod +x sync_fs.sh
 # notes:  local prefix is basically replaced/sed'd by remote prefix .
 #
 
+#
+# notes:
+# if this is a very large nested filesystem of clones and or filesystems underneath the parent filesystem, then put this in a while loop.
+# it will continue until no more 'zfs send | recv' commands are generated, since all filesystems will be in sync at the remote location
+#
+
 ./sync_fs.sh smos-00-bk1 zp99/tank_99/Btenzin zp99/tank_99 backup/zp99/tank_99
 
 ```
