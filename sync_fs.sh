@@ -30,7 +30,7 @@ if [[ -s "${BASEDIR}/rootfs.sync.cmds" ]]
 then
   # the ssh batching happens here
   printf "Executing rootfs.sync.cmds\n"
-  # cat "${BASEDIR}/rootfs.sync.cmds" | gxargs -P 8 -n1 bash -c
+  cat "${BASEDIR}/rootfs.sync.cmds" | gxargs -P 8 -n1 bash -c
 else
   printf "The rootfs.sync.cmds has no commands to process.\n"
 fi
@@ -40,9 +40,9 @@ if [[ -s "${BASEDIR}/clonefs.sync.cmds" ]]
 then
   # the ssh batching happens here
   printf "Executing clonefs.sync.cmds\n"
-  # cat "${BASEDIR}/clonefs.sync.cmds" | gxargs -P 8 -n1 bash -c
+  cat "${BASEDIR}/clonefs.sync.cmds" | gxargs -P 8 -n1 bash -c
 else
   printf "The clonefs.sync.cmds has no commands to process.\n"
 fi
 
-rm 
+rm
