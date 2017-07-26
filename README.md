@@ -1,4 +1,4 @@
-## ZPSEND Modules
+## zpsend Modules
 - `zpsend: receiver`
   - receives zfs filesystem questions from the asker.
 - `zpsend: asker`
