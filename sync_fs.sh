@@ -1,14 +1,15 @@
 #!/bin/bash
 
-if [[ "$#" != 3 ]]
+if [[ "$#" != 4 ]]
 then
-  printf "Usage: ./sync_dataset.sh [ filesystem name ] [ remote server ] [ remote fs prefix ]\n"
+  printf "Usage: ./sync_dataset.sh [ remote server ][ filesystem name ] [ local fs prefix ] [ remote fs prefix ]\n"
   exit 1
 fi
 
-ZFS_DATASET=$1
-REMOTE_SERVER=$2
-REMOTE_PREFIX=$3
+REMOTE_SERVER=$1
+ZFS_DATASET=$2
+LOCAL_PREFIX=$3
+REMOTE_PREFIX=$4
 
 BASEDIR=$(dirname $BASH_SOURCE)
 
@@ -21,8 +22,8 @@ printf "Retrieving all clone filesystems on %s\n" "$ZFS_DATASET"
 zfs list -Hro name,origin -t filesystem $ZFS_DATASET | awk '$2!="-"{print $1}' > $BASEDIR/clonefs.list
 
 # submit fs list for inquiry
-cat rootfs.list | gxargs -P 16 -I{} ${BASEDIR}/run_zpsend.sh $REMOTE_SERVER {} $ZFS_DATASET $REMOTE_PREFIX | tee ${BASEDIR}/rootfs.sync.cmds
-cat clonefs.list | gxargs -P 16 -I{} ${BASEDIR}/run_zpsend.sh $REMOTE_SERVER {} $ZFS_DATASET $REMOTE_PREFIX | tee ${BASEDIR}/clonefs.sync.cmds
+cat rootfs.list | gxargs -P 16 -I{} ${BASEDIR}/run_zpsend.sh $REMOTE_SERVER {} $LOCAL_PREFIX $REMOTE_PREFIX | tee ${BASEDIR}/rootfs.sync.cmds
+cat clonefs.list | gxargs -P 16 -I{} ${BASEDIR}/run_zpsend.sh $REMOTE_SERVER {} $LOCAL_PREFIX $REMOTE_PREFIX | tee ${BASEDIR}/clonefs.sync.cmds
 
 # check if sync script is not empty
 if [[ -s "${BASEDIR}/rootfs.sync.cmds" ]]
@@ -43,3 +44,5 @@ then
 else
   printf "The clonefs.sync.cmds has no commands to process.\n"
 fi
+
+rm 
