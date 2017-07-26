@@ -9,8 +9,7 @@
 
 ## Setting up the zpsend: receiver
 
-```
-bash
+```bash
 
 # make a copy of the setup_receiver.sh script
 bash setup_receiver.sh
@@ -23,8 +22,7 @@ while true; ./run_zpsend.sh ; sleep 1; done
 
 ## Setting up the zpsend: asker
 
-```
-bash
+```bash
 
 # make a copy of the setup_asker.sh script
 bash setup_asker.sh
@@ -35,13 +33,13 @@ cp sync_fs.sh zpsend/sync_fs.sh
 chmod +x sync_fs.sh
 
 #
-# pre-reqs:  make sure your localhost's pub key is in the server's authorized keys file
-# pre-reqs:  make sure that your server has the prefix filesystem created.  prefix filesystem will be the root under which the zfs receives will happen.
+# pre-reqs:  make sure your localhost's pub key is in the remote server's authorized keys file
+# pre-reqs:  make sure that your remote server has the prefix zfs filesystem created.  prefix filesystem will be the root under which the zfs receives will happen.
 #
 
 #
 # example usage: ./sync_fs [ remote backup server ] [ filesystem name ] [ local prefix ] [ remote prefix ]
-# notes:  local prefix will be substituted by remote prefix.
+# notes:  local prefix is basically replaced/sed'd by remote prefix .
 #
 
 ./sync_fs.sh smos-00-bk1 zp99/tank_99/Btenzin zp99/tank_99 backup/zp99/tank_99
