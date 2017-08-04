@@ -35,7 +35,7 @@ bash setup_asker.sh
 
 cd workspace-asker
 
-cp sync_fs.sh zpsend/sync_fs.sh
+cp zpsend/sync_fs.sh sync_fs.sh
 chmod +x sync_fs.sh
 
 #
