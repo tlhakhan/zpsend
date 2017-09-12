@@ -1,8 +1,10 @@
 ## zpsend 
 ### Modules
 - `zpsend: receiver`
+  - receive zfs filesystems (remote/backup server).
   - receives zfs filesystem questions from the asker.
 - `zpsend: asker`
+  - client, will send zfs filesystems to remote/backup server.
   - asks the receiver about which filesystem it has and its snapshots.  
   - asker will generate a set of zfs commands so that the receiver can properly receive the filesystems and snapshots.  
   - asker will continue to generate zfs commands for sync until all filesystems are in sync between asker and receiver.
@@ -46,6 +48,13 @@ chmod +x sync_fs.sh
 #
 # example usage: ./sync_fs [ remote backup server ] [ filesystem name ] [ local prefix ] [ remote prefix ]
 # notes:  local prefix is basically replaced/sed'd by remote prefix .
+
+# example:
+## [fs name] [local prefix] [remote prefix]
+## zp99/tank_99/Btenzin zp99/tank_99 backup/zp99/tank_99
+## local prefix is stripped out from the local name and replaced with the remote prefix to give remote name.
+## source filesystem:  zp99/tank_99/Btenzin
+## backup filesystem:  backup/zp99/tank_99/Btenzin
 #
 
 #
