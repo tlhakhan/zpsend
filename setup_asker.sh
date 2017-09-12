@@ -46,11 +46,11 @@ LOCAL_PREFIX=\$3
 FS_NAME=\$2
 REMOTE_PREFIX=\$4
 
-[[ "\$#" == "4" ]] || exit 1
+[[ "\$#" -eq "4" ]] || exit 1
 
 # tail bunyan logger
 pgrep -f 'tail -F /var/log/zpsend.log' &> /dev/null
-if [[ $? != 0 ]]
+if [[ "\$?" -ne "0" ]]
 then
   tail -F /var/log/zpsend.log | bunyan &
 fi
