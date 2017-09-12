@@ -3,8 +3,10 @@
 - `zpsend: receiver`
   - receive zfs filesystems (remote/backup server).
   - receives zfs filesystem questions from the asker.
+  - system should have asker's pub key in authorized_keys file.
 - `zpsend: asker`
   - client, will send zfs filesystems to remote/backup server.
+  - system should accept receiver's ssh fingerprint into known_hosts file.
   - asks the receiver about which filesystem it has and its snapshots.  
   - asker will generate a set of zfs commands so that the receiver can properly receive the filesystems and snapshots.  
   - asker will continue to generate zfs commands for sync until all filesystems are in sync between asker and receiver.
