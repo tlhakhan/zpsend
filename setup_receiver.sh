@@ -39,7 +39,7 @@ cat <<eof >$BASEDIR/run_zpsend.sh
 
 # tail bunyan logger
 pgrep -f 'tail -F /var/log/zpsend.log' &> /dev/null
-if [[ $? != 0 ]]
+if [[ \$? != 0 ]]
 then
   tail -F /var/log/zpsend.log | bunyan &
 fi
